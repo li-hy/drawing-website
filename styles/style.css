@@ -1,0 +1,10 @@
+html {
+	/* px means "pixels", basic font size is 10 pixels */
+	font-size: 10px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+	font-size: 60px;
+	text-align: center;
+}
