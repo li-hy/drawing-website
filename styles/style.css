@@ -7,4 +7,28 @@ html {
 h1 {
 	font-size: 60px;
 	text-align: center;
+	margin: 0;
+	padding: 20px 0;
+}
+
+p, li {
+	font-size: 16px;
+	/* a parameter can be followed by line-height, if it's a number,
+	 * it means the final size of font is the current size multiply
+	 * with the number
+	 */
+	line-height: 2;
+	letter-spacing: 1px;
+}
+
+body {
+	background-image: url(../images/16_bg_noise_scale.jpg);
+	background-position: left, top;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+	width: auto;
+	margin: 0 auto;
+	padding: 0 60px 60px 60px;
+	word-wrap: break-word;
 }
