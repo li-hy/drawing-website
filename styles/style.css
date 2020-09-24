@@ -10,6 +10,7 @@ header {
 }
 
 footer {
+	text-align: left;
 	font-size: 10px;
 }
 
@@ -40,4 +41,26 @@ body {
 	margin: 0 auto;
 	padding: 0 60px 60px 60px;
 	word-wrap: break-word;
+}
+
+/* class round_button */
+.round_button {
+	text-align: center;
+	text-decoration: none;	/* text decoration line */
+	font-size: 25px;
+	border-style: none;
+	display: inline-block;
+	width: 200px;
+	height: 40px;
+	line-height: 1.2;
+	border-radius: 10px;
+	margin: 10px;
+}
+
+.gray {
+	background-color: #C0C0C0;
+}
+
+.white {
+	background-color: #FFFFFF;
 }
