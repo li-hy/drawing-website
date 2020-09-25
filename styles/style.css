@@ -43,24 +43,44 @@ body {
 	word-wrap: break-word;
 }
 
-/* class round_button */
-.round_button {
-	text-align: center;
-	text-decoration: none;	/* text decoration line */
+.btn {
+	display: block;
+	width: 30%;
+	margin: 10px auto;
+	padding: 10px;
 	font-size: 25px;
-	border-style: none;
-	display: inline-block;
-	width: 200px;
-	height: 40px;
-	line-height: 1.2;
-	border-radius: 10px;
-	margin: 10px;
+	font-weight: normal;
+	line-height: 1.3;
+	text-align: center;
+	white-space: nowrap;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	user-select: none;
 }
 
-.gray {
-	background-color: #C0C0C0;
+.btn-primary {
+	color: white !important;
+	background-color: #3d4450;
+	border-color: #3d4450;
+	transition: all .3s ease;
 }
 
-.white {
-	background-color: #FFFFFF;
+::selection {
+	background-color: #e74c3c;
+	color: white;
+}
+
+a {
+	color: #d2322d;
+	text-decoration: none;
+}
+
+a:hover {
+	background-color: #e74c3c;
+	color: white;
+}
+
+.seltct-menu {
+	padding: 30px 20px;
 }
