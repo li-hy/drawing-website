@@ -18,7 +18,7 @@ h1 {
 	font-size: 40px;
 	text-align: center;
 	margin: 0;
-	padding: 20px 0;
+	padding: 10px 0;
 }
 
 p, li {
@@ -45,7 +45,7 @@ body {
 
 .btn {
 	display: block;
-	width: 80%;
+	width: 60%;
 	margin: 10px auto;
 	padding: 10px;
 	font-size: 25px;
@@ -85,18 +85,20 @@ div {
 	display: block;
 }
 
-.panel .notice {
+.panel {
+	width: 400px;
+	border-radius: 4px;
 	border-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
 	margin-bottom: 20px;
 	border: 1px solid transparent;
 	background-color: white;
 }
 
-.panel-notice {
-	border-radius: 4px;
-}
-
 .panel-heading {
+	font-size: 14px;
 	background-color: white;
 	padding: 10px 15px;
 	border-bottom: none;
@@ -106,11 +108,11 @@ div {
 
 .notice-body {
 	background-color: white;
-	width: 400px;
-	margin: 10px auto;
+	font-size: 12px;
+	margin: 0px auto 10px auto;
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 4px;
-	padding-top: 15px;
+	padding-top: 0px;
 	padding-bottom: 15px;
 	padding-left: 15px;
 	padding-right: 15px;
