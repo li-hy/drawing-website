@@ -7,31 +7,59 @@
 		<title>Enjoy Drawing!</title>
 		<link href="./styles/style.css" rel="stylesheet">
 	</head>
-	<body>
-		<main>
-			<div class="panel panel-notice">
-				<div class="panel-heading">
-					<h1><b>Welcome!</b></h1>
-					FAQ
-				</div>
-				<div class="notice-body">
-					Q: What can I do on this website?
-					<br>
-					A: You can enjoy painting on this website.
-					<br><br>
-					Q: How can I draw?
-					<br>
-					A: You can click the button below to enter the drawing interface.
-					<br><br>
-					<a class="btn btn-primary" href="images/welcome_background.jpg" title="to be continue">Hand painting</a>
-					<a class="btn btn-primary" href="images/16_bg_noise_scale.jpg" title="to be continue">Formula drawing</a>
-					<a class="btn btn-primary" href="mailto:mg20230091@smail.nju.edu.cn?subject=suggestion%20on%20sdrawing-website" target="_blank">Contect us</a>
+	<body class="custom-background nav-fixed">
+		<div class="shiftnav-wrap" style="padding-top: 0px;">
+			<header id="zan-header" class="navbar navbar-inverse navbar-fixed-top">
+				<nav class="container">
+					<a href="index.html">
+						<div class="navbar-brand">
+							Drawing-Website
+						</div>
+					</a>
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+							<li>
+								<a href="images//16_bg_noise_scale.jpg">
+									Drawing
+								</a>
+							</li>
+							<li>
+								<a href="images/welcome_background.jpg">
+									About us
+								</a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+			</header>
+
+			<div id="zan-body">
+				<div class="panel panel-notice">
+					<div class="panel-heading">
+						<h1><b>Welcome!</b></h1>
+						FAQ
+					</div>
+					<div class="notice-body">
+						Q: What can I do on this website?
+						<br>
+						A: You can enjoy painting on this website.
+						<br><br>
+						Q: How can I paint?
+						<br>
+						A: You can click the button below to enter the painting interface.
+						<br><br>
+						<a class="btn btn-primary" href="images/16_bg_noise_scale.jpg" title="to be continue">Start drawing</a>
+						<a class="btn btn-primary" href="mailto:mg20230091@smail.nju.edu.cn?subject=suggestion%20on%20sdrawing-website">Contect us</a>
+					</div>
 				</div>
 			</div>
-		</main>
 
-		<footer> <!-- unified footer of this website -->
-			<p>© 2020 vermilion-bird all rights reserved</p>
-		</footer>
+			<footer id="zan-footer"> <!-- unified footer of this website -->
+				<div class="container">
+					Powered by
+					<a href="index.html">Drawing-Website</a>
+				</div>
+			</footer>
+		</div>
 	</body>
 </html>
