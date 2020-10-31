@@ -178,13 +178,13 @@ body, header, main, footer, div {
 }
 
 .nav > li {
+	position: relative;
 	float: left;
 	color: white;
 	width: 200px;
 	margin: auto;
 	height: 100%;
 	line-height: 50px;
-	position: relative;
 	text-align: center;
 	display: block;
 }

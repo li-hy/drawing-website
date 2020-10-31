@@ -5,9 +5,12 @@
 		<meta name="author" content="vermilion bird">
 		<meta name="descirption" content="Drawing page">
 		<title>Enjoy Drawing!</title>
-		<link href="styles/style.css" rel="stylesheet">
+		<link href="styles/default.css" rel="stylesheet">
+		<link href="styles/drawing.css" rel="stylesheet">
+		<script type="text/javascript" defer="defer" src="scripts/formula.js"></script>
+		<script type="text/javascript" defer="defer" src="scripts/draw.js"></script>
 	</head>
-	<body class="nav-fixed">
+	<body class="custom-background nav-fixed" onload="drawAreaInit()">
 		<div class="shiftnav-wrap" style="padding-top: 0px;">
 			<header id="zan-header" class="navbar navbar-inverse navbar-fixed-top">
 				<nav class="container">
@@ -30,6 +33,28 @@
 					</div>
 				</nav>
 			</header>
+
+			<div id="draw-area">
+				<canvas id="my-canvas">
+					<p>Sorry, your brower doesn't support <b>canvas</b>.</p>
+				</canvas>
+			</div>
+
+			<div id="function-panel">
+				<h2>Function Panel</h2>
+				<div id="formula-editor">
+					<h3>Formula Editor</h3>
+					<button class="btn" onclick="addAFormula()">Add a formula</button>
+					<div id="formulas">
+						<div class="a-formula">
+							<p><input type="color" style="width: 25px"> y=<input type="text" style="width: 130px" value="" name="function"><button class="btn" onclick="deleteAFormula(this.parentNode.parentNode)">Delete</button><input type="checkbox" onclick="reDraw()">Draw</p>
+						</div>
+					</div>
+					<div id="range">
+						<p>X: <input id="x-left-value" style="width: 50px"> ~ <input id="x-right-value" style="width: 50px">   Y: <input id="y-left-value" style="width: 50px"> ~ <input id="y-right-value" style="width: 50px"></p>
+					</div>
+				</div>
+			</div>
 
 			<footer id="zan-footer"> <!-- unified footer of this website -->
 				<div class="container">

@@ -1,0 +1,104 @@
+#draw-area {
+	position: relative;
+	float: left;
+}
+#function-panel {
+	position: relative;
+	float: right;
+	background-color: white;
+	font-size: 14px;
+	width: 400px;
+	height: 600px;
+	margin: 10px;
+	border-radius: 4px;
+	padding-top: 5px;
+	padding-bottom: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+	word-break: break-all;
+}
+
+#function-panel > h2 {
+	margin: 0 auto;
+	padding: 3px;
+	text-align: center;
+}
+
+#formula-editor {
+	width: auto;
+	height: 400px;
+	overflow-y: auto;
+	margin: 0;
+	padding: 0;
+	border: 1px solid black;
+	border-radius: 2px;
+	color: black;
+}
+
+#formula-editor > h3 {
+	margin: 0;
+	padding: 2px;
+	text-align: center;
+}
+
+#formulas {
+	width: auto;
+	height: auto;
+}
+
+#formulas > .a-formula {
+	height: 30px;
+	width: auto;
+}
+
+#formulas > .a-formula > p, #formula-editor > #range > p {
+	font-size: 16px;
+	position: relative;
+	float: left;
+	height: 100%;
+	line-height: 100%;
+	text-align: center;
+	margin: 0;
+	margin-left: 5px;
+	padding: 5px 0;
+}
+
+#formulas > .a-formula > p > .btn:hover,
+#formula-editor > .btn:hover {
+	background-color: #e74c3c;
+	color: white;
+	transition: all .3s ease;
+}
+
+#formulas > .a-formula > p > .btn, #formula-editor > .btn {
+	display: inline-block;
+	position: relative;
+	margin: auto 3px;
+	padding: 5px;
+	font-size: 14px;
+	width: auto;
+	font-weight: normal;
+	line-height: 1.2;
+	text-align: center;
+	white-space: nowrap;
+	cursor: pointer;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	user-select: none;
+	color: white !important;
+	background-color: #3d4450;
+	border-color: #3d4450;
+	transition: all .3s ease;
+}
+
+#formula-editor > .btn {
+	float: none;
+	padding: 3px;
+	margin: 3px 0;
+}
+
+#formula-editor > #range {
+	margin: 5px 0;
+	padding: 0;
+	height: 30px;
+}
