@@ -1,7 +1,18 @@
 #draw-area {
 	position: relative;
 	float: left;
+	width: auto;
+	height: auto;
+	margin: 15px;
+	padding: 0;
 }
+
+#my-canvas {
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+
 #function-panel {
 	position: relative;
 	float: right;
@@ -9,12 +20,9 @@
 	font-size: 14px;
 	width: 400px;
 	height: 600px;
-	margin: 10px;
+	margin: 15px;
+	padding: 15px;
 	border-radius: 4px;
-	padding-top: 5px;
-	padding-bottom: 10px;
-	padding-left: 15px;
-	padding-right: 15px;
 	word-break: break-all;
 }
 
@@ -22,6 +30,17 @@
 	margin: 0 auto;
 	padding: 3px;
 	text-align: center;
+}
+
+#toolbar {
+	width: auto;
+	height: 130px;
+	margin: 0;
+	margin-bottom: 10px;
+	padding: 0;
+	border: 1px solid black;
+	border-radius: 2px;
+	color: black;
 }
 
 #formula-editor {
@@ -35,7 +54,7 @@
 	color: black;
 }
 
-#formula-editor > h3 {
+#formula-editor > h3, #toolbar > h3 {
 	margin: 0;
 	padding: 2px;
 	text-align: center;
@@ -51,8 +70,9 @@
 	width: auto;
 }
 
-#formulas > .a-formula > p, #formula-editor > #range > p {
-	font-size: 16px;
+#formulas > .a-formula > p, #formula-editor > .x-range > p,
+#toolbar > #axis-range > p {
+	font-size: 15px;
 	position: relative;
 	float: left;
 	height: 100%;
