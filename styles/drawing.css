@@ -19,7 +19,7 @@
 	background-color: white;
 	font-size: 14px;
 	width: 400px;
-	height: 600px;
+	height: 630px;
 	margin: 15px;
 	padding: 15px;
 	border-radius: 4px;
@@ -34,7 +34,7 @@
 
 #toolbar {
 	width: auto;
-	height: 130px;
+	height: 100px;
 	margin: 0;
 	margin-bottom: 10px;
 	padding: 0;
@@ -71,11 +71,11 @@
 }
 
 #formulas > .a-formula > p, #formula-editor > .x-range > p,
-#toolbar > #axis-range > p {
+#formula-editor > #axis-range > p, #toolbar > p {
 	font-size: 15px;
 	position: relative;
 	float: left;
-	height: 100%;
+	height: 30px;
 	line-height: 100%;
 	text-align: center;
 	margin: 0;
@@ -84,13 +84,14 @@
 }
 
 #formulas > .a-formula > p > .btn:hover,
-#formula-editor > .btn:hover {
+#formula-editor > .btn:hover, #pen:hover, #eraser:hover {
 	background-color: #e74c3c;
 	color: white;
 	transition: all .3s ease;
 }
 
-#formulas > .a-formula > p > .btn, #formula-editor > .btn {
+#toolbar > p > .btn, #formulas > .a-formula > p > .btn,
+#formula-editor > .btn {
 	display: inline-block;
 	position: relative;
 	margin: auto 3px;

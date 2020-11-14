@@ -44,17 +44,55 @@
 				<h2>Function Panel</h2>
 				<div id="toolbar">
 					<h3>Toolbar</h3>
-					<div id="axis-range">
-						<p>Axis range: X:<input id="x-left-value" style="width: 40px">~<input id="x-right-value" style="width: 40px"> Y:<input id="y-left-value" style="width: 40px">~<input id="y-right-value" style="width: 40px"><input type="checkbox" onclick="displayAxis(ctx, axis)">on</p>
-					</div>
-					<button onclick="drawLine(ctx, 10, 10, 200, 100)">1</button>
+					<p><button id="pen" class="btn" style="width: 60px" title="Use pen" onclick="setPen(this)">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
+					<p><button id="eraser" class="btn" style="width: 60px" title="Use eraser" onclick="setEraser(this)">Eraser</button> 1<input id="eraser-size" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
+					<p><button class="btn" title="Clear all images" onclick="clearAll()">Clear all</button>
 				</div>
 				<div id="formula-editor">
 					<h3>Formula Editor</h3>
-					<button class="btn" onclick="addAFormula()">Add a formula</button>
+					<div id="axis-range">
+						<p>
+							Axis: X:<input id="x-left-value" type="text" style="width: 35px" value="-10" onchange="changeAxis()">~<input id="x-right-value" type="text" style="width: 35px" value="10" onchange="changeAxis()">
+							Y:<input id="y-left-value" type="text" style="width: 35px" value="-5" onchange="changeAxis()">~<input id="y-right-value" type="text" style="width: 35px" value="5" onchange="changeAxis()">
+							<input id="show-axis" type="checkbox" title="Display axis" onchange="axis.show = this.checked; showAxis(axis.show)">on
+							<input id="grid" type="checkbox" title="Show grid" onchange="axis.displayGrid = this.checked; clearAllFunc(); showGrid(false); showAxis(false); showGrid(axis.displayGrid); drawAllFunc(); showAxis(axis.show)">grid
+						</p>
+					</div>
+					<button class="btn" title="Add a function" onclick="addAFormula()">
+						Add a formula
+					</button>
+					<button class="btn" title="Erase all function images" onclick="eraseAllFunc();">
+						Erase all functions
+					</button>
 					<div id="formulas">
 						<div class="a-formula">
-							<p><input type="color" style="width: 25px"> y=<input type="text" style="width: 130px" value="" name="function"><button class="btn" onclick="deleteAFormula(this.parentNode.parentNode)">Delete</button><input type="checkbox" onclick="reDraw()">Draw</p>
+							<p>
+								<input type="color" style="width: 25px" title="Line color" onchange="clearAllFunc(); showGrid(false); showAxis(false); drawAllFunc(); showGrid(axis.displayGrid); showAxis(axis.show)">
+								y=<input type="text" style="width: 130px" value="" placeholder="Function expression"><select name="drop-down-list" style="width: 18px" title="Add operators and basic functions" onchange="addOperator(this.parentNode)">
+									<option value='' selected></option>
+									<optgroup label="Basic operators">
+										<option value="+" title="Add">+</option>
+										<option value="-" title="Minus">-</option>
+										<option value="*" title="Multiply">*</option>
+										<option value="/" title="Divide">/</option>
+										<option value="^" title="Power">^</option>
+										<option value="(" title="Left parenthesis">(</option>
+										<option value=")" title="Right parenthesis">)</option>
+									</optgroup>
+									<optgroup label="Basic functions">
+										<option value="sqrt(" title="Square root">sqrt</option>
+										<option value="log2(" title="Base 2 logarithm">log2</option>
+										<option value="ln(" title="Natural logarithm">ln</option>
+										<option value="lg(" title="Base 10 logarithm">lg</option>
+										<option value="sin(" title="Sine">sin</option>
+										<option value="cos(" title="Cosine">cos</option>
+									</optgroup>
+								</select>
+								<button class="btn" title="Delete this function" onclick="deleteAFormula(this.parentNode.parentNode)">
+									Delete
+								</button>
+								<input type="checkbox" title="Show this function" onchange="clearAllFunc(); showGrid(false); showAxis(false); showGrid(axis.displayGrid); drawAllFunc(); showAxis(axis.show)">on<input type="checkbox" title="Bold line" onchange="clearAllFunc(); showGrid(false); showAxis(false); showGrid(axis.displayGrid); drawAllFunc(); showAxis(axis.show)"><b>B</b>
+							</p>
 						</div>
 					</div>
 				</div>
