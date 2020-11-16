@@ -3,8 +3,18 @@ function getInput(name) {
 	return document.getElementsByName(name)[0].children[0];
 }
 
+function delelteSpace(s) {
+	let blank = new RegExp(' ', 'g');
+	let tmp = s.split(blank);
+	s = '';
+	for (let i = 0; i < tmp.length; ++i)
+		s += tmp[i];
+	return s;
+}
+
 /* convert input text to function string, return a string */
 function input2FuncStr(f) {
+	f = delelteSpace(f);	/* delete all spaces */
 	let operator = new RegExp('([\-\+\*\/\^\(\)]+)', 'g');
 	let op = f.split(operator);	/* get operands and operators */
 	let funcStr = '';

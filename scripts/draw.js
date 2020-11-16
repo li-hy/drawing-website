@@ -175,6 +175,17 @@ function setAxis(axis, width, height, xLeftValue, xRightValue,
 	axis.hasSet = true;
 }
 
+/* auto set axis after web page loaded */
+function autoSetAxis() {
+	let xLeftValue = idName('x-left-value').value;
+	let xRightValue = idName('x-right-value').value;
+	let yLeftValue = idName('y-left-value').value;
+	let yRightValue = idName('y-right-value').value;
+
+	setAxis(axis, canvasWidth, canvasHeight, xLeftValue, xRightValue,
+		yLeftValue, yRightValue);
+}
+
 /* set origin */
 function setOrigin() {
 	ctx.translate(-1 * axis.xLeftRange + axis.blank,
@@ -315,7 +326,7 @@ function deleteAFormula(aFormula) {
 		aFormula.children[0].children[boldPos].checked = false;
 	}
 	drawAllFunc();
-	showGrid(true);
+	showGrid(axis.displayGrid);
 	showAxis(axis.show);
 }
 
