@@ -12,6 +12,36 @@ axis.yRightRange = 0;
 axis.blank = 0;
 axis.show = false;
 axis.displayGrid = false;
+axis.maxXDivision = 20;	/* max number of division of x axis */
+axis.maxYDivision = 10;	/* max number of division of y axis */
+/* value of division */
+axis.xDivision = [];
+axis.yDivision = [];
+
+/* set division of x axis */
+function setAxisDivision() {
+	/* clear x and y division */
+	axis.xDivision.length = 0;
+	axis.yDivision.length = 0;
+
+	/* number of division */
+	let xMax = 0;
+	let yMax = 0;
+
+	xMax = (axis.dx <= axis.maxXDivision) ? axis.dx :
+		axis.maxXDivision;
+	yMax = (axis.dy <= axis.maxYDivision) ? axis.dy :
+		axis.maxYDivision;
+	xStep = (axis.width - 2 * axis.blank) / xMax;
+	yStep = (axis.height - 2 * axis.blank) / yMax;
+
+	let x = axis.xLeftRange;
+	for (let i = 0; i <= xMax; ++i)
+		axis.xDivision.push(x + i * xStep);
+	let y = axis.yLeftRange;
+	for (i = 0; i <= yMax; ++i)
+		axis.yDivision.push(y - i * yStep);
+}
 
 var mouse = new Object();
 mouse.draw = false;		/* is drawing now? */
@@ -168,6 +198,8 @@ function setAxis(axis, width, height, xLeftValue, xRightValue,
 	axis.yRightRange = -1 * yRightValue / axis.dy *
 		(height - 2 * axis.blank);
 
+	setAxisDivision();
+
 	/* set origin */
 	setOrigin();
 
@@ -225,11 +257,12 @@ function drawAxis(color = 'black') {
 		axis.xRightRange, axis.yRightRange, color, lineSize);
 	let i, tx, ty;
 	ty = axis.yLeftRange + 10;
-	for (i = 0; i <= axis.dx; ++i) {
-		tx = axis.xLeftRange + i * axis.xScale;
+	for (i = 0; i < axis.xDivision.length; ++i) {
+		tx = axis.xDivision[i];
 		drawLine(tx, axis.yLeftRange, tx, axis.yLeftRange - 3,
 			color, lineSize);
-		ctx.fillText(axis.xLeftValue + i, tx, ty);
+		ctx.fillText((axis.xLeftValue + i * axis.dx /
+			(axis.xDivision.length - 1)).toFixed(1), tx, ty);
 	}
 	ctx.fillText('x', axis.xRightRange + axis.blank - 10, ty);
 
@@ -241,12 +274,13 @@ function drawAxis(color = 'black') {
 		axis.yRightRange - axis.blank + 5, arrowRadius, true, 0, color);
 	drawLine(axis.xRightRange, axis.yLeftRange,
 		axis.xRightRange, axis.yRightRange, color, lineSize);
-	tx = axis.xLeftRange - 10
-	for (i = 0; i <= axis.dy; ++i) {
-		ty =  axis.yRightRange + i * axis.yScale;
+	tx = axis.xLeftRange - 15;
+	for (i = 0; i <= axis.yDivision.length; ++i) {
+		ty =  axis.yDivision[i];
 		drawLine(axis.xLeftRange, ty, axis.xLeftRange + 3, ty,
 			color, lineSize);
-		ctx.fillText(axis.yRightValue - i, tx - 1, ty);
+		ctx.fillText((axis.yLeftValue + i * axis.dy /
+			(axis.yDivision.length - 1)).toFixed(1), tx - 1, ty);
 	}
 	ctx.fillText('y', tx, axis.yRightRange - axis.blank + 10);
 }
@@ -449,14 +483,15 @@ function showGrid(show) {
 		color = 'white';
 		lineSize = 6;
 	}
-	let x = axis.xLeftRange + axis.xScale;
-	for (; x < axis.xRightRange; x += axis.xScale) {
+	let i = 1;
+	for (; i < axis.xDivision.length; ++i) {
+		x = axis.xDivision[i];
 		drawLine(x, axis.yLeftRange, x, axis.yRightRange,
 			color, lineSize);
 	}
 	/* yLeft is pos and yRight is neg */
-	let y = axis.yLeftRange - axis.yScale;
-	for (; y > axis.yRightRange; y -= axis.yScale) {
+	for (i = 1; i < axis.yDivision.length; ++i) {
+		y = axis.yDivision[i];
 		drawLine(axis.xLeftRange, y, axis.xRightRange, y,
 			color, lineSize);
 	}

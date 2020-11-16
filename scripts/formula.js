@@ -1,3 +1,7 @@
+/* available operators and basic functions */
+var avail = ['', 'x', '+', '-', '*', '/', '^', '(', ')', 'sqrt', 'log2', 'ln',
+	'lg', 'log10', 'sin', 'cos'];
+
 /* get input infomation by name */
 function getInput(name) {
 	return document.getElementsByName(name)[0].children[0];
@@ -12,11 +16,26 @@ function delelteSpace(s) {
 	return s;
 }
 
+/* check if the function expression is available, @s is a string array */
+function check(s) {
+	for (let i = 0; i < s.length; ++i) {
+		offset = avail.indexOf(s[i]);
+		if (offset == -1 && isNaN(s[i])) {
+			return false
+		}
+	}
+	return true;
+}
+
 /* convert input text to function string, return a string */
 function input2FuncStr(f) {
 	f = delelteSpace(f);	/* delete all spaces */
-	let operator = new RegExp('([\-\+\*\/\^\(\)]+)', 'g');
+	let operator = new RegExp('([\-\+\*\/\^\(\)])', 'g');
 	let op = f.split(operator);	/* get operands and operators */
+	if (!check(op)) {
+		alert('Error: the function expression is wrong.');
+		return;
+	}
 	let funcStr = '';
 	let reg = '';
 	for (let i = 0; i < op.length; ++i) {
