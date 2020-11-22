@@ -10,7 +10,7 @@
 		<script type="text/javascript" defer="defer" src="scripts/formula.js"></script>
 		<script type="text/javascript" defer="defer" src="scripts/draw.js"></script>
 	</head>
-	<body class="custom-background nav-fixed" onload="autoSetAxis()">
+	<body class="custom-background nav-fixed" onload="autoSetAxis(funcCtx, axis)">
 		<div class="shiftnav-wrap" style="padding-top: 0px;">
 			<header id="zan-header" class="navbar navbar-inverse navbar-fixed-top">
 				<nav class="container">
@@ -35,9 +35,11 @@
 			</header>
 
 			<div id="draw-area">
-				<canvas id="my-canvas" width="1050" height="600">
+				<canvas id="background-layer" width="1050" height="600">
 					<p>Sorry, your brower doesn't support <b>canvas</b>.</p>
 				</canvas>
+				<canvas id="func-layer" width="1050" height="600"></canvas>
+				<canvas id="paint-layer" width="1050" height="600"></canvas>
 			</div>
 
 			<div id="function-panel">
@@ -46,29 +48,32 @@
 					<h3>Toolbar</h3>
 					<p><button id="pen" class="btn" style="width: 60px" title="Use pen" onclick="setPen(this)">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
 					<p><button id="eraser" class="btn" style="width: 60px" title="Use eraser" onclick="setEraser(this)">Eraser</button> 1<input id="eraser-size" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
-					<p><button class="btn" title="Clear all images" onclick="clearAll()">Clear all</button>
+					<p><button class="btn" title="Clear all tracks" onclick="clearAllTracks(paintCtx)">Clear tracks</button>
 				</div>
 				<div id="formula-editor">
 					<h3>Formula Editor</h3>
 					<div id="axis-range">
 						<p>
-							Axis: X:<input id="x-left-value" type="text" style="width: 35px" value="-10" onchange="changeAxis()">~<input id="x-right-value" type="text" style="width: 35px" value="10" onchange="changeAxis()">
-							Y:<input id="y-left-value" type="text" style="width: 35px" value="-5" onchange="changeAxis()">~<input id="y-right-value" type="text" style="width: 35px" value="5" onchange="changeAxis()">
-							<input id="show-axis" type="checkbox" title="Display axis" onchange="axis.show = this.checked; showAxis(axis.show)">on
-							<input id="grid" type="checkbox" title="Show grid" onchange="axis.displayGrid = this.checked; clearAllFunc(); showGrid(false); showAxis(false); showGrid(axis.displayGrid); drawAllFunc(); showAxis(axis.show)">grid
+							Axis: X:<input id="x-left-value" type="text" style="width: 35px" value="-10" onchange="changeAxis(funcCtx, axis)">~<input id="x-right-value" type="text" style="width: 35px" value="10" onchange="changeAxis(funcCtx, axis)">
+							Y:<input id="y-left-value" type="text" style="width: 35px" value="-5" onchange="changeAxis(funcCtx, axis)">~<input id="y-right-value" type="text" style="width: 35px" value="5" onchange="changeAxis(funcCtx, axis)">
+							<input id="show-axis" type="checkbox" title="Display axis" onchange="axis.show = this.checked; clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);">on
+							<input id="grid" type="checkbox" title="Show grid" onchange="axis.displayGrid = this.checked; clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);">grid
 						</p>
 					</div>
 					<button class="btn" title="Add a function" onclick="addAFormula()">
 						Add a formula
 					</button>
-					<button class="btn" title="Erase all function images" onclick="eraseAllFunc();">
+					<button class="btn" title="Erase all function images" onclick="eraseAllFunc(funcCtx, axis)">
 						Erase all functions
+					</button>
+					<button class="btn" title="Reset" onclick="resetFunc(funcCtx, axis)">
+						Reset
 					</button>
 					<div id="formulas">
 						<div class="a-formula">
 							<p>
-								<input type="color" style="width: 25px" title="Line color" onchange="clearAllFunc(); showGrid(false); showAxis(false); drawAllFunc(); showGrid(axis.displayGrid); showAxis(axis.show)">
-								y=<input type="text" style="width: 130px" value="" placeholder="Function expression"><select name="drop-down-list" style="width: 18px" title="Add operators and basic functions" onchange="addOperator(this.parentNode)">
+								<input type="color" style="width: 25px" title="Line color" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)">
+								y=<input type="text" style="width: 130px" value="" placeholder="Function expression" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)"><select name="drop-down-list" style="width: 18px" title="Add operators and basic functions" onchange="addOperator(this.parentNode)">
 									<option value='' selected></option>
 									<optgroup label="Basic operators">
 										<option value="+" title="Add">+</option>
@@ -88,10 +93,10 @@
 										<option value="cos(" title="Cosine">cos</option>
 									</optgroup>
 								</select>
-								<button class="btn" title="Delete this function" onclick="deleteAFormula(this.parentNode.parentNode)">
+								<input type="checkbox" title="Show this function" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);">on<input type="checkbox" title="Bold line" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);"><b>B</b>
+								<button class="btn" title="Delete this function" onclick="deleteAFormula(funcCtx, axis, this.parentNode.parentNode)">
 									Delete
 								</button>
-								<input type="checkbox" title="Show this function" onchange="clearAllFunc(); showGrid(false); showAxis(false); showGrid(axis.displayGrid); drawAllFunc(); showAxis(axis.show)">on<input type="checkbox" title="Bold line" onchange="clearAllFunc(); showGrid(false); showAxis(false); showGrid(axis.displayGrid); drawAllFunc(); showAxis(axis.show)"><b>B</b>
 							</p>
 						</div>
 					</div>

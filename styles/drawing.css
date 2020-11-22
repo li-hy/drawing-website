@@ -7,10 +7,23 @@
 	padding: 0;
 }
 
-#my-canvas {
-	background-color: white;
+canvas {
+	position: absolute;
 	border: 1px solid black;
 	border-radius: 4px;
+}
+
+#background-layer {
+	background-color: white;
+	z-index: 0;
+}
+
+#func-layer {
+	z-index: 1;
+}
+
+#paint-layer {
+	z-index: 2;
 }
 
 #function-panel {
