@@ -11,10 +11,19 @@ if (funcLayer.getContext) {
 	var funcCtx = funcLayer.getContext('2d');
 }
 
+/* mouse status when drawing */
+var mouseStatus = {
+	paint:        0,	/* paint now */
+	erase:        1,	/* erase now */
+	circle:       2,	/* draw circle now */
+	rectangle:    3,	/* draw rectangle now */
+	line:         4,	/* draw line now */
+	other:        5
+};
+
 /* create a mouse object for hand-paint */
 var mouse = new Object();
-mouse.draw = false;		/* is drawing now? */
-mouse.erase = false;		/* is erasing now? */
+mouse.status = mouseStatus.other;	/* mouse status */
 mouse.penSize = 1;		/* pen size */
 mouse.eraserSize = 1;		/* eraser size */
 mouse.hold = false;		/* is holding mouse now? */
@@ -33,22 +42,6 @@ function className(name) {
 	return document.getElementsByClassName(name);
 }
 
-/* set status when click the button pen */
-function setPen(btn) {
-	mouse.draw = !mouse.draw;
-	mouse.erase = false;
-	setBtnColor(btn, mouse.draw);
-	setBtnColor(idName('eraser'), mouse.erase);
-}
-
-/* set status when click the button eraser */
-function setEraser(btn) {
-	mouse.erase = !mouse.erase;
-	mouse.draw = false;
-	setBtnColor(btn, mouse.erase);
-	setBtnColor(idName('pen'), mouse.draw);
-}
-
 /* set the color of the button when it is pressed down or released */
 function setBtnColor(btn, press) {
 	if (press)
@@ -57,15 +50,43 @@ function setBtnColor(btn, press) {
 		btn.style.backgroundColor = '#3d4450';
 }
 
+/* reset mouse function button */
+function resetMFuncBtn() {
+	setBtnColor(idName('pen'), false);
+	setBtnColor(idName('eraser'), false);
+}
+
+/* set status when click the button pen */
+function setPen(btn) {
+	resetMFuncBtn();
+	mouse.status = (mouse.status == mouseStatus.paint) ?
+		mouseStatus.other : mouseStatus.paint;
+	setBtnColor(btn, (mouse.status == mouseStatus.paint));
+}
+
+/* set status when click the button eraser */
+function setEraser(btn) {
+	resetMFuncBtn();
+	mouse.status = (mouse.status == mouseStatus.erase) ?
+		mouseStatus.other : mouseStatus.erase;
+	setBtnColor(btn, (mouse.status == mouseStatus.erase));
+}
+
 paintLayer.addEventListener('mousedown', e => {
 	mouse.X = e.clientX - rect.left;
 	mouse.Y = e.clientY - rect.top;
-	if (mouse.draw)
+	switch (mouse.status) {
+	case mouseStatus.paint:
 		drawDot(paintCtx, mouse.X, mouse.Y, mouse.color,
 			mouse.penSize);
-	else if (mouse.erase)
+		break;
+	case mouseStatus.erase:
 		eraseSquare(paintCtx, mouse.X, mouse.Y,
 			mouse.eraserSize);
+		break;
+	default:
+		break;
+	}
 	mouse.hold = true;
 })
 
@@ -73,14 +94,20 @@ paintLayer.addEventListener('mousemove', e => {
 	if (mouse.hold) {
 		let curMouseX = e.clientX - rect.left
 		let curMouseY = e.clientY - rect.top;
-		if (mouse.draw)
+		switch (mouse.status) {
+		case mouseStatus.paint:
 			drawLine(paintCtx, mouse.X, mouse.Y,
 				curMouseX, curMouseY,
 				mouse.color, mouse.penSize);
-		else if (mouse.erase)
+			break;
+		case mouseStatus.erase:
 			eraseLine(paintCtx, mouse.X, mouse.Y,
 				curMouseX, curMouseY,
 				mouse.eraserSize);
+			break;
+		default:
+			break;
+		}
 		mouse.X = curMouseX;
 		mouse.Y = curMouseY;
 	}
@@ -90,12 +117,18 @@ paintLayer.addEventListener('mouseup', e => {
 	if (mouse.hold == true) {
 		let curMouseX = e.clientX - rect.left
 		let curMouseY = e.clientY - rect.top;
-		if (mouse.draw)
+		switch (mouse.status) {
+		case mouseStatus.paint:
 			drawDot(paintCtx, curMouseX, curMouseY,
 				mouse.color, mouse.penSize);
-		else if (mouse.erase)
+			break;
+		case mouseStatus.erase:
 			eraseSquare(paintCtx, curMouseX, curMouseY,
 				mouse.eraserSize);
+			break;
+		default:
+			break;
+		}
 	}
 	mouse.hold = false;
 })
