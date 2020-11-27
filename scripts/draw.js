@@ -1,3 +1,5 @@
+/* need to contain jsxgraphcore.js and jsxgraph.css first */
+
 /* create two canvases for hand-paint and math functions */
 var paintLayer = idName('paint-layer');
 var funcLayer = idName('func-layer');
@@ -54,6 +56,9 @@ function setBtnColor(btn, press) {
 function resetMFuncBtn() {
 	setBtnColor(idName('pen'), false);
 	setBtnColor(idName('eraser'), false);
+	setBtnColor(idName('line'), false);
+	setBtnColor(idName('circle'), false);
+	setBtnColor(idName('rectangle'), false);
 }
 
 /* set status when click the button pen */
@@ -637,3 +642,132 @@ function resetFunc(ctx, axis) {
 function addOperator(func) {
 	func.children[funcStrPos].value += func.children[opPos].value;
 }
+
+function clickPaint() {
+	idName('paint-layer').style.pointerEvents = 'auto';
+	idName('shape-layer').style.pointerEvents = 'none';
+}
+
+function clickShape() {
+	idName('shape-layer').style.pointerEvents = 'auto';
+	idName('paint-layer').style.pointerEvents = 'none';
+}
+
+/* set status when click the button line */
+function setLine(btn) {
+	resetMFuncBtn();
+	mouse.status = (mouse.status == mouseStatus.line) ?
+		mouseStatus.other : mouseStatus.line;
+	setBtnColor(btn, (mouse.status == mouseStatus.line));
+}
+
+/* set status when click the button circle */
+function setCircle(btn) {
+	resetMFuncBtn();
+	mouse.status = (mouse.status == mouseStatus.circle) ?
+		mouseStatus.other : mouseStatus.circle;
+	setBtnColor(btn, (mouse.status == mouseStatus.circle));
+}
+
+/* set status when click the button rectangle */
+function setRectangle(btn) {
+	resetMFuncBtn();
+	mouse.status = (mouse.status == mouseStatus.rectangle) ?
+		mouseStatus.other : mouseStatus.rectangle;
+	setBtnColor(btn, (mouse.status == mouseStatus.rectangle));
+}
+
+/* create a div element for jsxgraph */
+var brd = JXG.JSXGraph.initBoard('shape-layer', {boundingbox: [0, 0, 1050, -630], axis:false});
+
+var shapeLayer = idName('shape-layer');
+var shapeLayerOx = shapeLayer.getBoundingClientRect().left;
+var shapeLayerOy = shapeLayer.getBoundingClientRect().top;
+var lP;	/* the last point */
+var cP;	/* the current point */
+
+function createPoint(board, x, y, sz = 1) {
+	return board.create('point', [x, -1 * y], {size: sz, name: ''});
+}
+
+/* create a line
+ * @board	: the JXG board
+ * @p1		: one point of the line
+ * @p2		: the other point of the line
+ * @sz		: the width of the line
+ * @style	: dash style
+ */
+function createLine(board, p1, p2, sz = 1, style = 0) {
+	return board.create('line', [p1, p2], {straightFirst:false,
+		straightLast:false, strokeWidth:sz, dash:style});
+}
+
+/* create a circle
+ * @board	: the JXG board
+ * @c		: center of circle
+ * @r		: radius
+ * @sz		: width of line
+ * @style	: dash style
+ * @color	: filling color
+ * @trans	: transparency
+ */
+function createCircle(board, c, r, sz = 1, style = 0,
+	color = '#ffffff', trans = 1) {
+	board.create('circle', [c, r], {strokeWidth: sz, dash: style,
+		fillColor: color, fillOpacity: trans});
+}
+
+/* create a rectangle
+ * @board	: the JXG board
+ * @p1		: one point on the diagonal
+ * @p2		: the other point on the diagonal
+ */
+function createRect(board, p1, p2, color = '#ffffff') {
+	let p3 = board.create('point', [function() { return p1.X() }, function() { return p2.Y() }], {color: 'blue', size:1, name: ''});
+	let p4 = board.create('point', [function() { return p2.X() }, function() { return p1.Y() }], {color: 'blue', size:1, name: ''});
+	board.create('polygon', [p1, p4, p2, p3], {hasInnerPoints: true, fillColor: color});
+	p3.isDraggable = true;
+	p4.isDraggable = true;
+}
+
+shapeLayer.addEventListener('mousedown', e => {
+	mouse.X = e.clientX - shapeLayerOx;
+	mouse.Y = e.clientY - shapeLayerOy;
+	switch (mouse.status) {
+	case mouseStatus.line:
+	case mouseStatus.circle:
+	case mouseStatus.rectangle:
+		lP = createPoint(brd, mouse.X, mouse.Y);
+		break;
+	default:
+		break;
+	}
+	mouse.hold = true;
+})
+
+shapeLayer.addEventListener('mousemove', e => {
+	curMouseX = e.clientX - shapeLayerOx;
+	curMouseY = e.clientY - shapeLayerOy;
+})
+
+shapeLayer.addEventListener('mouseup', e => {
+	curMouseX = e.clientX - shapeLayerOx;
+	curMouseY = e.clientY - shapeLayerOy;
+	switch (mouse.status) {
+	case mouseStatus.line:
+		cP = createPoint(brd, curMouseX, curMouseY);
+		createLine(brd, lP, cP);
+		break;
+	case mouseStatus.circle:
+		cP = createPoint(brd, curMouseX, curMouseY);
+		createCircle(brd, lP, cP);
+		break;
+	case mouseStatus.rectangle:
+		cP = createPoint(brd, curMouseX, curMouseY);
+		createRect(brd, lP, cP);
+		break;
+	default:
+		break;
+	}
+	mouse.hold = false;
+})

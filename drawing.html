@@ -7,6 +7,8 @@
 		<title>Enjoy Drawing!</title>
 		<link href="styles/default.css" rel="stylesheet">
 		<link href="styles/drawing.css" rel="stylesheet">
+		<link href="styles/jsxgraph.css" rel="stylesheet">
+		<script type="text/javascript" defer="defer" src="scripts/jsxgraphcore.js"></script>
 		<script type="text/javascript" defer="defer" src="scripts/formula.js"></script>
 		<script type="text/javascript" defer="defer" src="scripts/draw.js"></script>
 	</head>
@@ -35,20 +37,25 @@
 			</header>
 
 			<div id="draw-area">
-				<canvas id="background-layer" width="1050" height="600">
+				<canvas id="background-layer" width="1060" height="630">
 					<p>Sorry, your brower doesn't support <b>canvas</b>.</p>
 				</canvas>
-				<canvas id="func-layer" width="1050" height="600"></canvas>
-				<canvas id="paint-layer" width="1050" height="600"></canvas>
+				<canvas id="func-layer" width="1060" height="630"></canvas>
+				<canvas id="paint-layer" width="1060" height="630"></canvas>
+				<div id="shape-layer">
+				</div>
 			</div>
 
 			<div id="function-panel">
 				<h2>Function Panel</h2>
 				<div id="toolbar">
 					<h3>Toolbar</h3>
-					<p><button id="pen" class="btn" style="width: 60px" title="Use pen" onclick="setPen(this)">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
-					<p><button id="eraser" class="btn" style="width: 60px" title="Use eraser" onclick="setEraser(this)">Eraser</button> 1<input id="eraser-size" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
+					<p><button id="pen" class="btn" style="width: 60px" title="Use pen" onclick="clickPaint(); setPen(this)">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
+					<p><button id="eraser" class="btn" style="width: 60px" title="Use eraser" onclick="clickPaint(); setEraser(this)">Eraser</button> 1<input id="eraser-size" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
 					<p><button class="btn" title="Clear all tracks" onclick="clearAllTracks(paintCtx)">Clear tracks</button>
+					<p><button id="line" class="btn" title="draw a line" onclick="clickShape(); setLine(this)">line</button>
+					<p><button id="circle" class="btn" title="draw a line" onclick="clickShape(); setCircle(this)">circle</button>
+					<p><button id="rectangle" class="btn" title="draw a line" onclick="clickShape(); setRectangle(this)">rect</button>
 				</div>
 				<div id="formula-editor">
 					<h3>Formula Editor</h3>
