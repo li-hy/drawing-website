@@ -678,7 +678,7 @@ function setRectangle(btn) {
 }
 
 /* create a div element for jsxgraph */
-var brd = JXG.JSXGraph.initBoard('shape-layer', {boundingbox: [0, 0, 1050, -630], axis:false});
+var brd = JXG.JSXGraph.initBoard('shape-layer', {boundingbox: [0, 0, 1050, -630], axis:false, showNavigation: false, showCopyright: false});
 
 var shapeLayer = idName('shape-layer');
 var shapeLayerOx = shapeLayer.getBoundingClientRect().left;
@@ -771,3 +771,8 @@ shapeLayer.addEventListener('mouseup', e => {
 	}
 	mouse.hold = false;
 })
+
+shapeLayer.oncontextmenu = function(e) {
+	e.preventDefault();
+	console.log(this);
+}
