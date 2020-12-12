@@ -777,3 +777,24 @@ function addLine(layer, lineColor = 'black') {
 			strokeWidth: 2,
 		}));
 }
+
+/* add a text box to the layer
+ * @layer         : layer used to add a text box
+ */
+function addTextBox(layer) {
+	mouse.status = mouseStatus.other;
+	setAllBtnColor();
+	let textbox = new fabric.Textbox('', {
+		left: 530,
+		top: 315,
+		borderColor: 'black',
+		editingBorderColor: 'blue',
+		fill: 'black',
+		width: 200,
+		height: 30,
+		fontSize: 14,
+		fontcolor: 'black',
+	});
+	layer.add(textbox);
+	layer.setActiveObject(textbox);
+}
