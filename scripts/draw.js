@@ -49,27 +49,24 @@ function setBtnColor(btn, press) {
 		btn.style.backgroundColor = '#3d4450';
 }
 
-/* reset mouse function button */
-function resetMFuncBtn() {
-	mouse.status = mouseStatus.other;
-	setBtnColor(idName('pen'), false);
-	setBtnColor(idName('eraser'), false);
+/* set all buttons' color */
+function setAllBtnColor() {
+	setBtnColor(idName('pen'), (mouse.status == mouseStatus.paint));
+	setBtnColor(idName('eraser'), (mouse.status == mouseStatus.erase));
 }
 
 /* set status when click the button pen */
-function setPen(btn) {
-	resetMFuncBtn();
+function setPen() {
 	mouse.status = (mouse.status == mouseStatus.paint) ?
 		mouseStatus.other : mouseStatus.paint;
-	setBtnColor(btn, (mouse.status == mouseStatus.paint));
+	setAllBtnColor();
 }
 
 /* set status when click the button eraser */
-function setEraser(btn) {
-	resetMFuncBtn();
+function setEraser() {
 	mouse.status = (mouse.status == mouseStatus.erase) ?
 		mouseStatus.other : mouseStatus.erase;
-	setBtnColor(btn, (mouse.status == mouseStatus.erase));
+	setAllBtnColor();
 }
 
 paintLayer.addEventListener('mousedown', e => {
@@ -660,6 +657,8 @@ window.onload = function() {
 	 * canvas
 	 */
 	shapeLayer = new fabric.Canvas('shape-layer');
+	fabric.Object.prototype.originX = 'center';
+	fabric.Object.prototype.originY = 'center';
 	$(".upper-canvas").contextmenu(onContextmenu);
 
 	/* initialize the right-click menu */
@@ -686,10 +685,11 @@ function onContextmenu(e) {
 		if (obj.containsPoint(pointer)) {
 			/* select the object */
 			shapeLayer.setActiveObject(obj);
-			/* show the menu */
-			showContextMenu(e, obj);
 		}
 	}
+	/* show the menu */
+	let setlectedObjs = shapeLayer.getActiveObjects();
+	showContextMenu(e, setlectedObjs);
 	/* prevent system right-click menu */
 	e.preventDefault();
 }
@@ -713,8 +713,10 @@ function showContextMenu(e, obj) {
 
 /* right-click function */
 function contextMenuClick(key) {
-	if (key == 'delete')
-		shapeLayer.remove(contextMenuItems[key].data);
+	if (key == 'delete') {
+		for (let i = 0; i < contextMenuItems[key].data.length; ++i)
+			shapeLayer.remove(contextMenuItems[key].data[i]);
+	}
 }
 
 /* add a rectangle to the layer
@@ -726,9 +728,11 @@ function contextMenuClick(key) {
  */
 function addRectangle(layer, w, h, borderColor = 'black',
 	fillColor = 'transparent',) {
+	mouse.status = mouseStatus.other;
+	setAllBtnColor();
 	layer.add(new fabric.Rect({
-		left: 450,
-		top: 230,
+		left: 530,
+		top: 315,
 		width: w,
 		height: h,
 		stroke: borderColor,
@@ -745,9 +749,11 @@ function addRectangle(layer, w, h, borderColor = 'black',
  */
 function addCircle(layer, r, borderColor = 'black',
 	fillColor = 'transparent') {
+	mouse.status = mouseStatus.other;
+	setAllBtnColor();
 	layer.add(new fabric.Circle({
-		top: 230,
-		left: 450,
+		left: 530,
+		top: 315,
 		radius: r,
 		stroke: borderColor,
 		strokeWidth: 1,
@@ -760,8 +766,10 @@ function addCircle(layer, r, borderColor = 'black',
  * @lineColor     : color of the line
  */
 function addLine(layer, lineColor = 'black') {
+	mouse.status = mouseStatus.other;
+	setAllBtnColor();
 	layer.add(new fabric.Line(
-		[450, 230, 550, 230],
+		[480, 315, 580, 315],
 		{
 			stroke: lineColor,
 			strokeWidth: 2,

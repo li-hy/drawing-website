@@ -57,12 +57,12 @@
 				<h2>Function Panel</h2>
 				<div id="toolbar">
 					<h3>Toolbar</h3>
-					<p><button id="pen" class="btn" style="width: 60px" title="Use pen" onclick="clickPaint(); setPen(this)">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
-					<p><button id="eraser" class="btn" style="width: 60px" title="Use eraser" onclick="clickPaint(); setEraser(this)">Eraser</button> 1<input id="eraser-size" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
+					<p><button id="pen" class="btn" style="width: 60px" title="Use pen" onclick="clickPaint(); setPen()">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
+					<p><button id="eraser" class="btn" style="width: 60px" title="Use eraser" onclick="clickPaint(); setEraser()">Eraser</button> 1<input id="eraser-size" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
 					<p><button class="btn" title="Clear all tracks" onclick="clearAllTracks(paintCtx)">Clear tracks</button>
-					<p><button id="line" class="btn" title="draw a line" onclick="clickShape(); resetMFuncBtn(); addLine(shapeLayer)">line</button>
-					<p><button id="circle" class="btn" title="draw a line" onclick="clickShape(); resetMFuncBtn(); addCircle(shapeLayer, 50)">circle</button>
-					<p><button id="rectangle" class="btn" title="draw a line" onclick="clickShape(); resetMFuncBtn(); addRectangle(shapeLayer, 100, 100)">rect</button>
+					<p><button id="line" class="btn" title="draw a line" onclick="clickShape(); addLine(shapeLayer)">line</button>
+					<p><button id="circle" class="btn" title="draw a line" onclick="clickShape(); addCircle(shapeLayer, 50)">circle</button>
+					<p><button id="rectangle" class="btn" title="draw a line" onclick="clickShape(); addRectangle(shapeLayer, 100, 100)">rect</button>
 				</div>
 				<div id="formula-editor">
 					<h3>Formula Editor</h3>
