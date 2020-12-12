@@ -717,6 +717,8 @@ function contextMenuClick(key) {
 		for (let i = 0; i < contextMenuItems[key].data.length; ++i)
 			shapeLayer.remove(contextMenuItems[key].data[i]);
 	}
+	shapeLayer.discardActiveObject();
+	shapeLayer.requestRenderAll();
 }
 
 /* add a rectangle to the layer
