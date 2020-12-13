@@ -702,6 +702,16 @@ function showContextMenu(e, obj) {
 			icon: 'delete',
 			data: obj,
 		},
+		'formulaEditor': {
+			name: 'Formula Editor',
+			icon: 'edit',
+			data: obj,
+			disabled: function() {
+				/* enable when only select one text box */
+				return (obj.length != 1 ||
+					obj[0].name != 'textBox');
+			},
+		},
 	};
 	/* the position where the right-click menu is showed */
 	let menuPos = {
@@ -716,9 +726,9 @@ function contextMenuClick(key) {
 	if (key == 'delete') {
 		for (let i = 0; i < contextMenuItems[key].data.length; ++i)
 			shapeLayer.remove(contextMenuItems[key].data[i]);
+			shapeLayer.discardActiveObject();
+			shapeLayer.requestRenderAll();
 	}
-	shapeLayer.discardActiveObject();
-	shapeLayer.requestRenderAll();
 }
 
 /* add a rectangle to the layer
@@ -732,7 +742,7 @@ function addRectangle(layer, w, h, borderColor = 'black',
 	fillColor = 'transparent',) {
 	mouse.status = mouseStatus.other;
 	setAllBtnColor();
-	layer.add(new fabric.Rect({
+	let rectangle = new fabric.Rect({
 		left: 530,
 		top: 315,
 		width: w,
@@ -740,7 +750,9 @@ function addRectangle(layer, w, h, borderColor = 'black',
 		stroke: borderColor,
 		strokeWidth: 1,
 		fill: fillColor
-	}))
+	});
+	layer.add(rectangle);
+	rectangle.name = 'shape';
 }
 
 /* add a circle to the layer
@@ -753,14 +765,16 @@ function addCircle(layer, r, borderColor = 'black',
 	fillColor = 'transparent') {
 	mouse.status = mouseStatus.other;
 	setAllBtnColor();
-	layer.add(new fabric.Circle({
+	let circle = new fabric.Circle({
 		left: 530,
 		top: 315,
 		radius: r,
 		stroke: borderColor,
 		strokeWidth: 1,
 		fill: fillColor
-	}))
+	});
+	layer.add(circle);
+	circle.name = 'shape';
 }
 
 /* add a line to the layer
@@ -770,12 +784,14 @@ function addCircle(layer, r, borderColor = 'black',
 function addLine(layer, lineColor = 'black') {
 	mouse.status = mouseStatus.other;
 	setAllBtnColor();
-	layer.add(new fabric.Line(
+	let line = new fabric.Line(
 		[480, 315, 580, 315],
 		{
 			stroke: lineColor,
 			strokeWidth: 2,
-		}));
+		});
+	layer.add(line);
+	line.name = 'shape';
 }
 
 /* add a text box to the layer
@@ -796,5 +812,6 @@ function addTextBox(layer) {
 		fontcolor: 'black',
 	});
 	layer.add(textbox);
+	textbox.name = 'textBox';
 	layer.setActiveObject(textbox);
 }
