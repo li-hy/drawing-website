@@ -127,3 +127,19 @@ canvas {
 	padding: 0;
 	height: 30px;
 }
+
+#right-click-formula-editor {
+	background-color: white;
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	width: 560px;
+	height: 300px;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+
+.content {
+	border: 1px solid black;
+	border-radius: 2px;
+}

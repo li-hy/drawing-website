@@ -648,11 +648,14 @@ function clickShape() {
 }
 
 var shapeLayer; /* shape canvas */
-
 var contextMenuItems; /* menu item */
+var menuPos;    /* menu position */
+var mathField;
 
 window.onload = function() {
 	autoSetAxis(funcCtx, axis);
+	/* hide the right-click formula editor */
+	$('#right-click-formula-editor').hide();
 	/* add right-click event monitoring on the upper object of the
 	 * canvas
 	 */
@@ -714,7 +717,7 @@ function showContextMenu(e, obj) {
 		},
 	};
 	/* the position where the right-click menu is showed */
-	let menuPos = {
+	menuPos = {
 		x: e.clientX,
 		y: e.clientY
 	};
@@ -728,6 +731,13 @@ function contextMenuClick(key) {
 			shapeLayer.remove(contextMenuItems[key].data[i]);
 			shapeLayer.discardActiveObject();
 			shapeLayer.requestRenderAll();
+	}
+	if (key == 'formulaEditor') {
+		let rCFE = $('#right-click-formula-editor');
+		/* show where the mouse is */
+		rCFE.css({ 'left': menuPos.x, 'top': menuPos.y - 50});
+		rCFE.show();
+		rCFE.load('https://localhost/../lib/rightClickFormulaEditor/index.html');
 	}
 }
 
@@ -806,9 +816,11 @@ function addTextBox(layer) {
 		borderColor: 'black',
 		editingBorderColor: 'blue',
 		fill: 'black',
-		width: 200,
+		width: 100,
 		height: 30,
-		fontSize: 14,
+		lineHeight: 1.3,
+		fontSize: 16,
+		fontWeight: '530',
 		fontcolor: 'black',
 	});
 	layer.add(textbox);

@@ -7,14 +7,17 @@
 
 		<title>Enjoy Drawing!</title>
 
-		<link href="styles/jquery.contextMenu.min.css" rel="stylesheet">
 		<link href="styles/default.css" rel="stylesheet">
 		<link href="styles/drawing.css" rel="stylesheet">
+		<link href="lib/rightClickMenu/jquery.contextMenu.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="lib/rightClickFormulaEditor/lib/mathquill-0.10.1/mathquill.css"/>
 
-		<script type="text/javascript" defer="defer" src="scripts/jquery-3.5.1.js"></script>
-		<script type="text/javascript" defer="defer" src="scripts/jquery.ui.position.min.js"></script>
-		<script type="text/javascript" defer="defer" src="scripts/jquery.contextMenu.min.js"></script>
-		<script type="text/javascript" defer="defer" src="scripts/fabric.js"></script>
+		<script type="text/javascript" defer="defer" src="lib/jquery-3.5.1.js"></script>
+		<script type="text/javascript" defer="defer" src="lib/rightClickMenu/jquery.ui.position.min.js"></script>
+		<script type="text/javascript" defer="defer" src="lib/rightClickMenu/jquery.contextMenu.min.js"></script>
+		<script type="text/javascript" defer="defer" src="lib/rightClickMenu/jquery.ui.position.min.js"></script>
+		<script type="text/javascript" defer="defer" src="lib/rightClickFormulaEditor/lib/mathquill-0.10.1/mathquill.js"></script>
+		<script type="text/javascript" defer="defer" src="lib/fabric.js"></script>
 		<script type="text/javascript" defer="defer" src="scripts/formula.js"></script>
 		<script type="text/javascript" defer="defer" src="scripts/draw.js"></script>
 	</head>
@@ -48,8 +51,10 @@
 				</canvas>
 				<canvas id="func-layer" style="z-index: 1" width="1060" height="630"></canvas>
 				<canvas id="paint-layer" style="z-index: 2" width="1060" height="630"></canvas>
-				<canvas id="shape-layer" style="z-index: 3" width="1060" height="630">
-				</canvas>
+				<canvas id="shape-layer" style="z-index: 3" width="1060" height="630"></canvas>
+				<div id="right-click-formula-editor" style="z-index: 999">
+					<iframe id="f-editor" src="lib/rightClickFormulaEditor/index.html" style="width: 100%; height: 100%"></iframe>
+				</div>
 				<div id="contextmenu-output"></div>
 			</div>
 
@@ -59,11 +64,11 @@
 					<h3>Toolbar</h3>
 					<p><button id="pen" class="btn" style="width: 60px" title="Use pen" onclick="clickPaint(); setPen()">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
 					<p><button id="eraser" class="btn" style="width: 60px" title="Use eraser" onclick="clickPaint(); setEraser()">Eraser</button> 1<input id="eraser-size" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
-					<p><button class="btn" title="Clear all tracks" onclick="clearAllTracks(paintCtx)">Clear tracks</button>
-					<p><button id="line" class="btn" title="Add a line" onclick="clickShape(); addLine(shapeLayer)">line</button>
-					<p><button id="circle" class="btn" title="Add a circle" onclick="clickShape(); addCircle(shapeLayer, 50)">circle</button>
-					<p><button id="rectangle" class="btn" title="Add a rectangle" onclick="clickShape(); addRectangle(shapeLayer, 100, 100)">rect</button>
-					<p><button id="text-box" class="btn" title="Add a text box" onclick="clickShape(); addTextBox(shapeLayer)">Text box</button>
+					<p><button class="btn" title="Clear all tracks" onclick="clearAllTracks(paintCtx)">Clear tracks</button></p>
+					<p><button id="line" class="btn" title="Add a line" onclick="clickShape(); addLine(shapeLayer)">Line</button></p>
+					<p><button id="circle" class="btn" title="Add a circle" onclick="clickShape(); addCircle(shapeLayer, 50)">Circle</button></p>
+					<p><button id="rectangle" class="btn" title="Add a rectangle" onclick="clickShape(); addRectangle(shapeLayer, 100, 100)">Rect</button></p>
+					<p><button id="text-box" class="btn" title="Add a text box" onclick="clickShape(); addTextBox(shapeLayer)">Text box</button></p>
 				</div>
 				<div id="formula-editor">
 					<h3>Formula Editor</h3>
@@ -88,26 +93,7 @@
 						<div class="a-formula">
 							<p>
 								<input type="color" style="width: 25px" title="Line color" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)">
-								y=<input type="text" style="width: 130px" value="" placeholder="Function expression" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)"><select name="drop-down-list" style="width: 18px" title="Add operators and basic functions" onchange="addOperator(this.parentNode)">
-									<option value='' selected></option>
-									<optgroup label="Basic operators">
-										<option value="+" title="Add">+</option>
-										<option value="-" title="Minus">-</option>
-										<option value="*" title="Multiply">*</option>
-										<option value="/" title="Divide">/</option>
-										<option value="^" title="Power">^</option>
-										<option value="(" title="Left parenthesis">(</option>
-										<option value=")" title="Right parenthesis">)</option>
-									</optgroup>
-									<optgroup label="Basic functions">
-										<option value="sqrt(" title="Square root">sqrt</option>
-										<option value="log2(" title="Base 2 logarithm">log2</option>
-										<option value="ln(" title="Natural logarithm">ln</option>
-										<option value="lg(" title="Base 10 logarithm">lg</option>
-										<option value="sin(" title="Sine">sin</option>
-										<option value="cos(" title="Cosine">cos</option>
-									</optgroup>
-								</select>
+								<p class="content" contenteditable="true"></p>
 								<input type="checkbox" title="Show this function" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);">on<input type="checkbox" title="Bold line" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);"><b>B</b>
 								<button class="btn" title="Delete this function" onclick="deleteAFormula(funcCtx, axis, this.parentNode.parentNode)">
 									Delete
