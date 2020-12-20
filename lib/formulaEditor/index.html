@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="lib/jquery-3.2.1/jquery-3.2.1.min.js"></script>
+    <script src="lib/html2canvas.js"></script>
+    <script src="js/FEditor.js"></script>
+    <link rel="stylesheet" href="lib/mathquill-0.10.1/mathquill.css"/>
+    <script src="lib/mathquill-0.10.1/mathquill.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
+    <style>
+        .tab-content div {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="menu">
+        <ul>
+            <li class="list">
+                <div class="item-title"><h2>编辑</h2></div>
+                <div class="sub-menu">
+                    <ul>
+                        <li id="undo">撤销(Ctrl+Z)</li>
+                        <li id="redo">恢复(Ctrl+Y)</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="list">
+                <div class="item-title"><h2>样式</h2></div>
+                <div class="sub-menu">
+                    <ul>
+                        <li id="mathMode">数学(Alt+Shift+'+')</li>
+                        <li id="textMode">文本(Ctrl+Shift+E)</li>
+                        <li>函数</li>
+                        <li>变量</li>
+                        <li>希腊符号</li>
+                        <li>矢量矩阵</li>
+                        <li>其它</li>
+                        <li class="define">定义</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="list">
+                <div class="item-title"><h2>大小</h2></div>
+                <div class="sub-menu">
+                    <ul>
+                        <li>标准(F)</li>
+                        <li>下标(U)</li>
+                        <li>子下标(B)</li>
+                        <li>符号(Y)</li>
+                        <li>子符号(M)</li>
+                        <li>其他(O)</li>
+                        <li class="small">较小(S)</li>
+                        <li>较大(L)</li>
+                        <li>重置小/大(R)</li>
+                        <li class="define">定义(D)</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="list">
+                <div class="item-title"><h2>预设公式</h2></div>
+                <div class="sub-menu" style="height:350px;overflow-y:auto">
+                    <ul>
+                        <li class="ys" id="ysFormula1" onclick="ysFormula1();">
+                            <div class="ys-title">二次公式</div>
+                            <div class="ys-icon"><img src="images/ys/1.png"></div>
+                        </li>
+                        <li class="ys" id="ysFormula2" onclick="ysFormula2();">
+                            <div class="ys-title">二项式定理</div>
+                            <div class="ys-icon"><img src="images/ys/2.png"></div>
+                        </li>
+                        <li class="ys" id="ysFormula3" onclick="ysFormula3();">
+                            <div class="ys-title">勾股定理</div>
+                            <div class="ys-icon"><img src="images/ys/3.png"></div>
+                        </li>
+                        <li class="ys" id="ysFormula4" onclick="ysFormula4();">
+                            <div class="ys-title">傅里叶级数</div>
+                            <div class="ys-icon"><img src="images/ys/4.png"></div>
+                        </li>
+                        <li class="ys" id="ysFormula5" onclick="ysFormula5();">
+                            <div class="ys-title">和的展开式</div>
+                            <div class="ys-icon"><img src="images/ys/5.png"></div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="button-area">
+        <div class="side"></div>
+        <ul class="button">
+            <li class="subtype1 item"><img src="images/symbols/symbol3.png" class="id0300" data-status="leave"/></li>
+            <li class="subtype1 item"><img src="images/symbols/symbol9.png" class="id0900" data-status="leave"/></li>
+            <li class="subtype1 item"><img src="images/symbols/symbol10.png" class="id1000" data-status="leave"/></li>
+            <li class="subtype1 item"><img src="images/symbols/symbol12.png" class="id1200" data-status="leave"/></li>
+            <li class="subtype1 item"><img src="images/symbols/symbol13.png" class="id1300" data-status="leave"/></li>
+            <li class="subtype2 item" onclick="button21();"><img src="images/symbols/symbol21.png"/></li>
+            <li class="subtype2 item" onclick="button22();"><img src="images/symbols/symbol22.png"/></li>
+            <li class="subtype2 item" onclick="button26();"><img src="images/symbols/symbol26.png"/></li>
+            <li class="subtype2 item" onclick="button33();"><img src="images/symbols/symbol33.png"/></li>
+            <li class="subtype2 item" onclick="button35();"><img src="images/symbols/symbol35.png"/></li>
+            <li class="subtype2 item" onclick="button36();"><img src="images/symbols/symbol36.png"/></li>
+            <li class="subtype2 item" onclick="button37();"><img src="images/symbols/symbol37.png"/></li>
+            <li class="subtype2 item" onclick="button38();"><img src="images/symbols/symbol38.png"/></li>
+        </ul>
+        <div class="tab-content">
+            <div id="id0300" data-status="leave" class="sub-area">
+                <img src="images/sub-symbols/3.png"/>
+                <ul>
+                    <li class="type1" onclick="button0301();"></li>
+                    <li class="type1" onclick="button0302();"></li>
+                    <li class="type1" onclick="button0303();"></li>
+                    <li class="type1" onclick="button0304();"></li>
+                    <li class="type1" onclick="button0305();"></li>
+                    <li class="type1" onclick="button0306();"></li>
+                    <li class="type1" onclick="button0307();"></li>
+                    <li class="type1" onclick="button0308();"></li>
+                    <li class="type1" onclick="button0309();"></li>
+                    <li class="type1" onclick="button0310();"></li>
+                    <li class="type1" onclick="button0311();"></li>
+                    <li class="type1" onclick="button0312();"></li>
+                    <li class="type1" onclick="button0313();"></li>
+                    <li class="type1" onclick="button0314();"></li>
+                    <li class="type1" onclick="button0315();"></li>
+                    <li class="type1" onclick="button0316();"></li>
+                    <li class="type1" onclick="button0317();"></li>
+                    <li class="type1" onclick="button0318();"></li>
+                    <li class="type1" onclick="button0319();"></li>
+                    <li class="type1" onclick="button0320();"></li>
+                    <li class="type1" onclick="button0321();"></li>
+                    <li class="type1" onclick="button0322();"></li>
+                    <li class="type1" onclick="button0323();"></li>
+                    <li class="type1" onclick="button0324();"></li>
+                    <li class="type1" onclick="button0325();"></li>
+                    <li class="type1" onclick="button0326();"></li>
+                    <li class="type1" onclick="button0327();"></li>
+                    <li class="type1" onclick="button0328();"></li>
+                    <li class="type1" onclick="button0329();"></li>
+                    <li class="type1" onclick="button0330();"></li>
+                    <li class="type1" onclick="button0331();"></li>
+                    <li class="type1" onclick="button0332();"></li>
+                    <li class="type1" onclick="button0333();"></li>
+                    <li class="type1" onclick="button0334();"></li>
+                    <li class="type1" onclick="button0335();"></li>
+                    <li class="type1" onclick="button0336();"></li>
+                    <li class="type1" onclick="button0337();"></li>
+                    <li class="type1" onclick="button0338();"></li>
+                    <li class="type1" onclick="button0339();"></li>
+                    <li class="type1" onclick="button0340();"></li>
+                </ul>
+            </div>
+            <div id="id0900" data-status="leave" class="sub-area">
+                <img src="images/sub-symbols/9.png"/>
+                <ul>
+                    <li class="type1" onclick="button0901();"></li>
+                    <li class="type1" onclick="button0902();"></li>
+                    <li class="type1" onclick="button0903();"></li>
+                    <li class="type1" onclick="button0904();"></li>
+                    <li class="type1" onclick="button0905();"></li>
+                    <li class="type1" onclick="button0906();"></li>
+                    <li class="type1" onclick="button0907();"></li>
+                    <li class="type1" onclick="button0908();"></li>
+                    <li class="type1" onclick="button0909();"></li>
+                    <li class="type1" onclick="button0910();"></li>
+                    <li class="type1" onclick="button0911();"></li>
+                    <li class="type1" onclick="button0912();"></li>
+                    <li class="type1" onclick="button0913();"></li>
+                    <li class="type1" onclick="button0914();"></li>
+                    <li class="type1" onclick="button0915();"></li>
+                    <li class="type1" onclick="button0916();"></li>
+                    <li class="type1" onclick="button0917();"></li>
+                    <li class="type1" onclick="button0918();"></li>
+                    <li class="type1" onclick="button0919();"></li>
+                    <li class="type1" onclick="button0920();"></li>
+                    <li class="type1" onclick="button0921();"></li>
+                    <li class="type1" onclick="button0922();"></li>
+                    <li class="type1" onclick="button0923();"></li>
+                    <li class="type1" onclick="button0924();"></li>
+                    <li class="type1" onclick="button0925();"></li>
+                    <li class="type1" onclick="button0926();"></li>
+                    <li class="type1" onclick="button0927();"></li>
+                    <li class="type1" onclick="button0928();"></li>
+                </ul>
+            </div>
+            <div id="id1000" data-status="leave" class="sub-area">
+                <img src="images/sub-symbols/10.png"/>
+                <ul>
+                    <li class="type1" onclick="button1001();"></li>
+                    <li class="type1" onclick="button1002();"></li>
+                    <li class="type1" onclick="button1003();"></li>
+                    <li class="type1" onclick="button1004();"></li>
+                    <li class="type1" onclick="button1005();"></li>
+                    <li class="type1" onclick="button1006();"></li>
+                    <li class="type1" onclick="button1007();"></li>
+                    <li class="type1" onclick="button1008();"></li>
+                    <li class="type1" onclick="button1009();"></li>
+                    <li class="type1" onclick="button1010();"></li>
+                    <li class="type1" onclick="button1011();"></li>
+                    <li class="type1" onclick="button1012();"></li>
+                    <li class="type1" onclick="button1013();"></li>
+                    <li class="type1" onclick="button1014();"></li>
+                    <li class="type1" onclick="button1015();"></li>
+                    <li class="type1" onclick="button1016();"></li>
+                    <li class="type1" onclick="button1017();"></li>
+                    <li class="type1" onclick="button1018();"></li>
+                    <li class="type1" onclick="button1019();"></li>
+                    <li class="type1" onclick="button1020();"></li>
+                    <li class="type1" onclick="button1021();"></li>
+                    <li class="type1" onclick="button1022();"></li>
+                    <li class="type1" onclick="button1023();"></li>
+                    <li class="type1" onclick="button1024();"></li>
+                </ul>
+            </div>
+            <div id="id1200" data-status="leave" class="sub-area">
+                <img src="images/sub-symbols/12.png"/>
+                <ul>
+                    <li class="type2" onclick="button1201();"></li>
+                    <li class="type2" onclick="button1202();"></li>
+                    <li class="type2" onclick="button1203();"></li>
+                    <li class="type2" onclick="button1204();"></li>
+                    <li class="type2" onclick="button1205();"></li>
+                    <li class="type2" onclick="button1206();"></li>
+                    <li class="type2" onclick="button1207();"></li>
+                    <li class="type2" onclick="button1208();"></li>
+                    <li class="type2" onclick="button1209();"></li>
+                    <li class="type2" onclick="button1210();"></li>
+                </ul>
+            </div>
+            <div id="id1300" data-status="leave" class="sub-area">
+                <img src="images/sub-symbols/13.png"/>
+                <ul>
+                    <li class="type2" onclick="button1301();"></li>
+                    <li class="type2" onclick="button1302();"></li>
+                    <li class="type2" onclick="button1303();"></li>
+                    <li class="type2" onclick="button1304();"></li>
+                    <li class="type2" onclick="button1305();"></li>
+                    <li class="type2" onclick="button1306();"></li>
+                    <li class="type2" onclick="button1307();"></li>
+                    <li class="type2" onclick="button1308();"></li>
+                    <li class="type2" onclick="button1309();"></li>
+                    <li class="type2" onclick="button1310();"></li>
+                    <li class="type2" onclick="button1311();"></li>
+                    <li class="type2" onclick="button1312();"></li>
+                    <li class="type2" onclick="button1313();"></li>
+                    <li class="type2" onclick="button1314();"></li>
+                    <li class="type2" onclick="button1315();"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <p class="content" name="editor" id="editor" contenteditable="true"></p>
+</div>
+</body>
+<script>
+    var aItemTitle = document.querySelectorAll(".item-title h2"),
+        aSubMenu = document.querySelectorAll(".sub-menu"),
+        aList = document.querySelectorAll(".list"),
+        aItem = document.querySelectorAll(".sub-menu ul li"),
+        aSingleBtn = document.querySelectorAll(".button-area ul li.subtype2");
+
+    for (let i = 0; i < aItem.length; i++) {
+        if (aItem[i].getAttribute("class") === "ys") {
+            /*do nothing*/
+        } else {
+            aItem[i].onclick = function () {
+                aItem[i].parentNode.parentNode.style.display = "none";
+            };
+        }
+    }
+    //鼠标移入主菜单时，背景颜色改变，下拉子菜单
+    {
+        'use strict'
+        for (let i = 0; i < aList.length; ++i) {
+            aList[i].onmouseover = function () {
+                aItemTitle[i].style.background = " rgb(229,243,255)";
+                aSubMenu[i].style.display = "block";
+            };
+            aList[i].onmouseout = function () {
+                aItemTitle[i].style.background = "";
+                aSubMenu[i].style.display = "none";
+            };
+        }
+    }
+
+    //鼠标移入子菜单，背景颜色发生改变
+    {
+        'use strict'
+        for (let i = 0; i < aItem.length; i++) {
+            aItem[i].onmouseover = function () {
+                this.style.background = "rgb(10,119,214)";
+            };
+            aItem[i].onmouseout = function () {
+                this.style.background = "rgb(240,240,240)";
+            };
+        }
+    }
+    //对于第二种类型的按钮
+    //鼠标移入时，边框发生变化
+    {
+        'use strict'
+        for (let i = 0; i < aSingleBtn.length; i++) {
+            aSingleBtn[i].onmouseenter = function () {
+                this.style.border = "1px solid rgb(160,160,160)";
+            };
+            aSingleBtn[i].onmouseleave = function () {
+                this.style.border = "";
+            };
+        }
+    }
+
+    var subArea = document.querySelectorAll("div.sub-area");
+    for (var i = 0; i < subArea.length; i++) {
+        subArea[i].onmouseenter = function () {
+            this.setAttribute("data-status", "enter");
+        }
+        subArea[i].onmouseleave = function () {
+            this.style.display = "none";
+            this.setAttribute("data-status", "leave");
+        }
+    }
+
+    /*added at 2020-07-13*/
+    var imgList = document.querySelectorAll(".button-area ul li.subtype1 img");
+    for (var i = 0; i < imgList.length; i++) {
+        imgList[i].onmouseenter = function () {
+            this.parentNode.style.border = "1px solid rgb(160,160,160)";
+            var classValue = this.getAttribute("class");
+
+            this.setAttribute("data-status", "enter");
+
+            var aImg = document.querySelectorAll("#" + classValue + " img")[0];
+            var width = aImg.width;
+            var height = aImg.height;
+            var div = document.getElementById(classValue);
+            this.parentNode.appendChild(div);
+            var children = this.parentNode.children;
+            for (var i = 0; i < children.length; i++) {
+                if (children[i] != this) {
+                    children[i].style.width = width + "px";
+                    children[i].style.height = height + "px";
+                    children[i].style.display = "block";
+                    children[i].setAttribute("data-status", "leave");
+                }
+            }
+
+            var subArea = document.querySelectorAll(".button-area ul li.subtype1 div.sub-area");
+            for (var i = 0; i < subArea.length; i++) {
+                if (subArea[i].id != classValue) {
+                    subArea[i].style.display = "none";
+                }
+            }
+        }
+        imgList[i].onmouseleave = function () {
+            this.parentNode.style.border = "";
+            this.setAttribute("data-status", "leave");
+        }
+
+    }
+
+    document.getElementsByClassName("button-area")[0].addEventListener("mousemove", function () {
+        var imgList = document.querySelectorAll(".button-area ul li.subtype1 img");
+        for (var i = 0; i < imgList.length; i++) {
+            if (imgList[i].getAttribute("data-status") == "leave"
+                && imgList[i].parentNode.lastChild.getAttribute("data-status") == "leave"
+                && imgList[i].parentNode.lastChild.style.display == "block") {
+                imgList[i].parentNode.lastChild.style.display = "none";
+            }
+        }
+    })
+
+    //鼠标移入子按钮时，边框发生变化
+    var lilist = document.querySelectorAll("div.sub-area ul li");
+    for (var i = 0; i < lilist.length; i++) {
+        lilist[i].onmouseenter = function () {
+            this.classList.add("border");
+        };
+        lilist[i].onmouseleave = function () {
+            this.classList.remove("border");
+        };
+    }
+    /*added at 2020-07-13*/
+
+    var oEditor = document.querySelector("#editor");
+    var MQ = MathQuill.getInterface(2),//获取特定版本的接口
+        mathField = MQ.MathField(oEditor);
+    mathField.keystroke('Shift-Left');
+    $("#editor").mousedown().mouseup();  //获取页面的焦点
+
+    /*added later*/
+    var cPushArray = new Array();
+    var cStep = -1;
+    /*对数组中的相邻元素进行去重,非常重要！*/
+    var unique = (arr) => {
+        let newArr = [arr[0]];
+        for (let i = 1; i < arr.length; i++) {
+            if (arr[i] !== newArr[newArr.length - 1]) {
+                newArr.push(arr[i]);
+            }
+        }
+        return newArr;
+    };
+
+    /*添加监听事件*/
+    function myfunction() {
+        var latex = mathField.latex();
+        // console.log("latex:"+latex);
+        if (latex !== "") {
+            cPushArray.push(latex);
+        }
+        cPushArray = unique(cPushArray);
+        // cStep = cPushArray.length -1;
+        cStep = cPushArray.length;
+        // console.log(JSON.stringify(cPushArray));
+    }
+
+    /*数学-文本模式*/
+    function mathToText() {
+        var selecter = window.getSelection ? window.getSelection() : document.selection.createRange().text;
+        if (selecter != null) {
+            var latexStr = mathField.latex();
+            var index = latexStr.lastIndexOf(selecter.toString());
+            if (index != -1) {
+                var substring1 = latexStr.substring(0, index);
+                var substring2 = latexStr.substring(index + selecter.toString().length);
+                var str = "\\mathrm{" + selecter + "}";
+                mathField.empty();
+                mathField.write(substring1 + str + substring2);
+            }
+        }
+    }
+
+    function textToMath() {
+        var selecter = window.getSelection ? window.getSelection() : document.selection.createRange().text;
+        if (selecter != null) {
+            var latexStr = mathField.latex();
+            var index = latexStr.lastIndexOf(selecter.toString());
+            if (index != -1) {
+                var substring1 = latexStr.substring(0, index);
+                var substring2 = latexStr.substring(index + selecter.toString().length);
+                var selectpart = selecter.toString();
+                var index2 = selectpart.lastIndexOf("\\mathrm{");
+                var mathrmStr = "\\mathrm{";
+                var str = selectpart.substring(index2 + mathrmStr.length, selectpart.length - 1);
+                mathField.empty();
+                mathField.write(substring1 + str + substring2);
+            }
+        }
+    }
+
+    /*数学-文本模式*/
+
+    document.getElementsByClassName("mq-root-block")[0].addEventListener('DOMNodeInserted', myfunction);
+    document.getElementsByClassName("mq-root-block")[0].addEventListener('DOMNodeRemoved', myfunction);
+    /*监听键盘按键*/
+    document.onkeydown = function (e) {
+        var keyCode = e.keyCode || e.which || e.charCode;
+        var ctrlKey = e.ctrlKey || e.metaKey;
+        var shiftkey = e.shiftKey;
+        var altKey = e.altKey;
+        /*ctrl+Z||ctrl+Y:撤销操作||反撤销操作 undo||redo*/
+        if (ctrlKey && (keyCode == 90 || keyCode == 89)) {
+            document.getElementsByClassName("mq-root-block")[0].removeEventListener('DOMNodeInserted', myfunction);
+            document.getElementsByClassName("mq-root-block")[0].removeEventListener('DOMNodeRemoved', myfunction);
+            /*ctrl+Z:撤销操作 undo*/
+            if (ctrlKey && keyCode == 90) {
+                if (cStep > 0) {
+                    cStep--;
+                    var latexString = cPushArray[cStep];
+                    if (latexString != null && latexString != undefined) {
+                        mathField.empty();
+                        mathField.write(cPushArray[cStep]);
+                    } else {
+                        mathField.empty();
+                    }
+                }
+            }
+            /*ctrl+Y:反撤销操作 redo*/
+            if (ctrlKey && keyCode == 89) {
+                if (cStep < cPushArray.length - 1) {
+                    cStep++;
+                    /*console.log("cstep=" + cStep);*/
+                    var latexString = cPushArray[cStep];
+                    if (latexString != null && latexString != undefined) {
+                        mathField.empty();
+                        mathField.write(cPushArray[cStep]);
+                    } else {
+                        mathField.empty();
+                    }
+                }
+            }
+            document.getElementsByClassName("mq-root-block")[0].addEventListener('DOMNodeInserted', myfunction);
+            document.getElementsByClassName("mq-root-block")[0].addEventListener('DOMNodeRemoved', myfunction);
+        }
+
+        /*由数学模式切换到文本模式*/
+        if (ctrlKey && shiftkey && keyCode == 69) {
+            mathToText();
+        }
+        /*  if (ctrlKey && shiftkey && keyCode == 187) {
+              textToMath();
+          }*/
+        if (altKey && shiftkey && keyCode == 187) {
+            textToMath();
+        }
+        /*由数学模式切换到文本模式*/
+    }
+    /*数学-文本模式*/
+    var selectedText;
+    document.getElementById("editor").onmousemove = function () {
+        selectedText = window.getSelection ? window.getSelection().toString() : document.selection.createRange().text;
+    }
+
+    function mathToTextTwo() {
+        if (selectedText != null) {
+            var latexStr = mathField.latex();
+            console.log("latexStr=" + latexStr);
+            var index = latexStr.lastIndexOf(selectedText);
+            console.log("index=" + index);
+            if (index != -1) {
+                var substring1 = latexStr.substring(0, index);
+                var substring2 = latexStr.substring(index + selectedText.length);
+                var str = "\\mathrm{" + selectedText + "}";
+                console.log("subString1=" + substring1);
+                console.log("subString2=" + substring2);
+                console.log("str=" + str);
+                console.log("substring1 + str + substring2 = " + substring1 + str + substring2);
+                mathField.empty();
+                mathField.write(substring1 + str + substring2);
+            }
+        }
+    }
+
+    function textToMathTwo() {
+        if (selectedText != null) {
+            var latexStr = mathField.latex();
+            console.log("latexStr=" + latexStr);
+            var index = latexStr.lastIndexOf(selectedText);
+            console.log("index=" + index);
+            if (index != -1) {
+                var substring1 = latexStr.substring(0, index);
+                var substring2 = latexStr.substring(index + selectedText.length);
+                var index2 = selectedText.lastIndexOf("\\mathrm{");
+                var mathrmStr = "\\mathrm{";
+                var str = selectedText.substring(index2 + mathrmStr.length, selectedText.length - 1);
+
+                console.log("subString1=" + substring1);
+                console.log("subString2=" + substring2);
+                console.log("str=" + str);
+                console.log("substring1 + str + substring2 = " + substring1 + str + substring2);
+                mathField.empty();
+                mathField.write(substring1 + str + substring2);
+            }
+        }
+    }
+
+    document.getElementById("textMode").onclick = function () {
+        mathToTextTwo();
+
+        this.parentNode.parentNode.style.display = "none";
+    }
+    document.getElementById("mathMode").onclick = function () {
+        textToMathTwo();
+        this.parentNode.parentNode.style.display = "none";
+    }
+    /*数学-文本模式*/
+    document.getElementById("undo").onclick = function () {
+        document.getElementsByClassName("mq-root-block")[0].removeEventListener('DOMNodeInserted', myfunction);
+        document.getElementsByClassName("mq-root-block")[0].removeEventListener('DOMNodeRemoved', myfunction);
+        if (cStep > 0) {
+            cStep--;
+            var latexString = cPushArray[cStep];
+            if (latexString != null && latexString != undefined) {
+                mathField.empty();
+                mathField.write(cPushArray[cStep]);
+            } else {
+                mathField.empty();
+            }
+        }
+        document.getElementsByClassName("mq-root-block")[0].addEventListener('DOMNodeInserted', myfunction);
+        document.getElementsByClassName("mq-root-block")[0].addEventListener('DOMNodeRemoved', myfunction);
+
+        this.parentNode.parentNode.style.display = "none";
+    }
+    document.getElementById("redo").onclick = function () {
+        document.getElementsByClassName("mq-root-block")[0].removeEventListener('DOMNodeInserted', myfunction);
+        document.getElementsByClassName("mq-root-block")[0].removeEventListener('DOMNodeRemoved', myfunction);
+        if (cStep < cPushArray.length - 1) {
+            cStep++;
+            /*console.log("cstep=" + cStep);*/
+            var latexString = cPushArray[cStep];
+            if (latexString != null && latexString != undefined) {
+                mathField.empty();
+                mathField.write(cPushArray[cStep]);
+            } else {
+                mathField.empty();
+            }
+        }
+        document.getElementsByClassName("mq-root-block")[0].addEventListener('DOMNodeInserted', myfunction);
+        document.getElementsByClassName("mq-root-block")[0].addEventListener('DOMNodeRemoved', myfunction);
+
+        this.parentNode.parentNode.style.display = "none";
+    }
+</script>
+</html>

@@ -1,6 +1,6 @@
 /* available operators and basic functions */
-var avail = ['', 'x', '+', '-', '*', '/', '^', '(', ')', 'sqrt', 'log2', 'ln',
-	'lg', 'log10', 'sin', 'cos'];
+var avail = ['', 'x', '+', '-', '*', '/', 'pow', '(', ')', ',', 'sqrt',
+	'log2', 'ln', 'lg', 'log10', 'sin', 'cos'];
 
 /* get input infomation by name */
 function getInput(name) {
@@ -8,11 +8,13 @@ function getInput(name) {
 }
 
 function delelteSpace(s) {
-	let blank = new RegExp(' ', 'g');
+	let blank = new RegExp('[ \\\\]', 'g');
 	let tmp = s.split(blank);
 	s = '';
-	for (let i = 0; i < tmp.length; ++i)
-		s += tmp[i];
+	for (let i = 0; i < tmp.length; ++i) {
+		if (tmp[i] != ' ')
+			s += tmp[i];
+	}
 	return s;
 }
 
@@ -29,23 +31,21 @@ function check(s) {
 
 /* convert input text to function string, return a string */
 function input2FuncStr(f) {
+	f = latex_to_js(f);
 	f = delelteSpace(f);	/* delete all spaces */
-	let operator = new RegExp('([\-\+\*\/\^\(\)])', 'g');
+	let operator = new RegExp('([\-\+\*\/\^\(\)\,])', 'g');
 	let op = f.split(operator);	/* get operands and operators */
 	if (!check(op)) {
 		alert('Error: the function expression is wrong.');
 		return;
 	}
 	let funcStr = '';
-	let reg = '';
 	for (let i = 0; i < op.length; ++i) {
 		switch (op[i]) {
-		case '^':	/* power */
-			last = op[i - 1];	/* last operand */
-			last += '$';
-			reg = new RegExp(last);
-			funcStr = funcStr.replace(reg, '');
-			funcStr += ('Math.pow(' + op[i - 1] + ', ' + op[++i] + ')');
+		case 'pow':	/* power */
+			funcStr += ('Math.pow' + op[i+1] + op[i+2] + op[i+3]
+				+ op[i+4] + op[i+5]);
+			i += 6;
 			break;
 		case 'ln':	/* ln */
 			funcStr += 'Math.log';

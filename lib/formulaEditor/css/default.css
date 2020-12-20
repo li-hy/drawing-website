@@ -1,0 +1,283 @@
+.title {
+    height: 26px;
+    vertical-align: middle;
+    font: italic bold 16px/30px arial, sans-serif;
+    background: rgb(15, 185, 243);
+}
+
+/*菜单部分*/
+.menu {
+    height: 20px;
+    width: 100%;
+    border-bottom: 1px solid black;
+    background: rgb(15, 185, 243);
+}
+
+.list {
+    float: left;
+}
+
+.item-title {
+    width: 53px;
+    height: 20px;
+}
+
+.item-title h2 {
+    font-size: 10px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.sub-menu {
+    position: absolute;
+    z-index: 1;
+    display: none;
+    overflow: auto;
+    background-color: rgb(240, 240, 240);
+    border: 1px solid white;
+
+}
+
+.sub-menu ul li {
+    height: 30px;
+    font-size: 10px;
+    text-indent: 10px;
+    line-height: 30px;
+    width: 200px;
+    cursor: pointer;
+}
+
+.sub-menu ul li.ys {
+
+    display: block;
+    padding: 10px;
+    margin-bottom: 5px;
+    line-height: 0;
+    height: 100px;
+    width: 360px;
+    cursor: pointer;
+}
+
+li.ys .ys-icon {
+    position: relative;
+    left: 1px;
+    top: 10px;
+
+}
+
+.sub-menu ul li.define, .sub-menu ul li.small {
+    border-top: 1px solid rgb(163, 157, 157);
+}
+
+/*按钮区域*/
+.button-area {
+    position: relative;
+    width: 482px;
+    height: 31px;
+    background-color: rgb(160, 160, 160);
+    border-right: 1px solid black;
+}
+
+.button-area div.side {
+    display: inline-block;
+    width: 8px;
+    height: 25px;
+    background-color: rgb(153, 180, 209);
+    border: 4px solid rgb(240, 240, 240);
+}
+
+.button-area ul.button {
+    position: absolute;
+    left: 21px;
+    top: 2px;
+    width: 460px;
+    height: 30px;
+}
+
+.button-area ul.button li.item {
+    position: relative;
+    float: left;
+    border: 1px solid rgb(241, 240, 238);
+
+}
+
+.button-area ul li.subtype1 {
+    width: 50px;
+    height: 25px;
+}
+
+.button-area ul li.subtype2 {
+    width: 23px;
+    height: 23px;
+}
+
+.button-area ul li div.sub-area {
+    position: relative;
+    display: none;
+    border: 0;
+    width: 66px;
+    height: 99px;
+}
+
+.button-area ul li div.sub-area img {
+    position: absolute;
+    left: 1px;
+    top: -3px;
+    z-index: 90;
+}
+
+.button-area ul li div.sub-area ul {
+    position: absolute;
+    left: 1px;
+    top: -3px;
+    z-index: 100;
+    border: 1px solid rgb(241, 240, 238);
+}
+
+.button-area ul li div.sub-area ul li {
+    float: left;
+    border: 1px solid rgb(241, 240, 238);
+}
+
+.button-area ul li div.sub-area ul li.type1 {
+    width: 12px;
+    height: 15px;
+    margin: 1px;
+}
+
+.button-area ul li div.sub-area ul li.type2 {
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+}
+
+.content {
+    border-top: 1px solid black;
+}
+
+.border {
+    /* border: 1px solid rgb(160,160,160) !important; */
+    border-top: 1px solid white !important;
+    border-left: 1px solid white !important;
+    border-right: 1px solid rgb(160, 160, 160) !important;
+    border-bottom: 1px solid rgb(160, 160, 160) !important;
+}
+
+#editor {
+    width: 95%;
+    height: 45px;
+    padding: 10px;
+    margin-top: 5px;
+    margin-left: 5px;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.dialog {
+    background-color: #fff;
+    position: absolute;
+    border: 1px solid #acacac;
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1;
+}
+
+.dialog-header {
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0px 30px 0px 20px;
+    cursor: default;
+}
+
+.dialog-content {
+    padding: 15px 20px;
+}
+
+.suffix {
+    font-weight: 400;
+}
+
+.export-des {
+    font-weight: normal;
+    color: #555;
+    margin-left: 10px;
+}
+
+.export-list li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+    padding: 10px 0px;
+    border-bottom: 1px solid #EFEFEF;
+    font-weight: bold;
+}
+
+.dialog-buttons {
+    padding: 0px 20px 20px;
+    text-align: right;
+}
+
+.designer-button {
+    display: inline-block;
+    line-height: 30px;
+    border: 0px;
+    height: 30px;
+    padding: 0px 10px;
+    text-align: center;
+    background-color: #2EB5E5;
+    background-image: -moz-linear-gradient(top, #34C0E9, #29AAE1);
+    background-image: -webkit-linear-gradient(top, #34C0E9, #29AAE1);
+    background-image: -o-linear-gradient(top, #34C0E9, #29AAE1);
+    background-image: -ms-linear-gradient(top, #34C0E9, #29AAE1);
+    background-image: linear-gradient(top, #34C0E9, #29AAE1);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#34c0e9', endColorstr='#29aae1', GradientType=0);
+    color: white;
+    cursor: pointer;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+    -webkit-box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.3);
+    min-width: 50px;
+}
+
+.dlg-mask {
+    background: #fff;
+    opacity: 0.60;
+    filter: alpha(opacity=60);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+/* my code */
+#clear-btn {
+	float: right;
+}
+
+#clear-btn > .item-title {
+	width: 53px;
+	height: 20px;
+}
+#clear-btn > .item-title > h2 {
+	background-color: transparent;
+	color: black;
+	font-size: 10px;
+	line-height: 20px;
+	text-align: center;
+	cursor: pointer;
+}
+
+#close-btn > .item-title > h2:hover {
+	background-color: red;
+	color: white;
+}

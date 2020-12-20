@@ -228,16 +228,14 @@ axis.yDivision = [];
 funcBlank = 5;
 
 /* const parameter, some options' positions in the function area */
-/* color option */
-var colorPos = 0;
 /* function expression string */
-var funcStrPos = 1;
-/* operator */
-var opPos = 2;
+var funcStrPos = 0;
+/* color option */
+var colorPos = 1;
 /* show this function? */
-var showFuncPos = 3;
+var showFuncPos = 2;
 /* bold line */
-var boldPos = 4;
+var boldPos = 3;
 
 /* set division of x axis */
 function setAxisDivision(axis) {
@@ -543,10 +541,10 @@ function drawAllFunc(ctx, axis) {
 	}
 	funcList = className('a-formula');
 	for (let i = 0; i < funcList.length; ++i) {
-		let color = funcList[i].children[0].children[colorPos].value;
-		let funcStr = funcList[i].children[0].children[funcStrPos].value;
-		let show = funcList[i].children[0].children[showFuncPos].checked;
-		let isBold = funcList[i].children[0].children[boldPos].checked;
+		let funcStr = funcList[i].children[funcStrPos].children[0].contentWindow.getLatexExp();
+		let color = funcList[i].children[colorPos].value;
+		let show = funcList[i].children[showFuncPos].checked;
+		let isBold = funcList[i].children[boldPos].checked;
 		drawFunc(ctx, axis, color, funcStr, show, isBold);
 	}
 }
@@ -574,8 +572,8 @@ function eraseAllFunc(ctx, axis) {
 
 	funcList = className('a-formula');
 	for (let i = 0; i < funcList.length; ++i) {
-		funcList[i].children[0].children[showFuncPos].checked = false;
-		funcList[i].children[0].children[boldPos].checked = false;
+		funcList[i].children[showFuncPos].checked = false;
+		funcList[i].children[boldPos].checked = false;
 	}
 
 	showAxis(ctx, axis);
@@ -585,14 +583,9 @@ function eraseAllFunc(ctx, axis) {
 /* add a new formula into formula editor's area */
 function addAFormula() {
 	let newFormula = className('a-formula')[0].cloneNode(true);
-	/* random color */
-	newFormula.children[0].children[colorPos].value = getRandomColor();
-	/* clear function input */
-	newFormula.children[0].children[funcStrPos].value = '';
-	/* clear button 'on' */
-	newFormula.children[0].children[showFuncPos].checked = false;
-	/* clear button 'B' */
-	newFormula.children[0].children[boldPos].checked = false;
+	newFormula.children[colorPos].value = getRandomColor();
+	newFormula.children[showFuncPos].checked = false;
+	newFormula.children[boldPos].checked = false;
 	idName('formulas').appendChild(newFormula);
 }
 
@@ -602,10 +595,9 @@ function deleteAFormula(ctx, axis, aFormula) {
 	if (className('a-formula').length > 1) {
 		aFormula.parentNode.removeChild(aFormula);
 	} else {
-		aFormula.children[0].children[colorPos].value = '#000000';
-		aFormula.children[0].children[funcStrPos].value = '';
-		aFormula.children[0].children[showFuncPos].checked = false;
-		aFormula.children[0].children[boldPos].checked = false;
+		aFormula.children[colorPos].value = '#000000';
+		aFormula.children[showFuncPos].checked = false;
+		aFormula.children[boldPos].checked = false;
 	}
 	showAxis(ctx, axis);
 	showGrid(ctx, axis);
@@ -618,10 +610,9 @@ function resetFunc(ctx, axis) {
 	idName('grid').checked = false;
 	funcList = className('a-formula');
 
-	funcList[0].children[0].children[colorPos].value = '#000000';
-	funcList[0].children[0].children[funcStrPos].value = '';
-	funcList[0].children[0].children[showFuncPos].checked = false;
-	funcList[0].children[0].children[boldPos].checked = false;
+	funcList[0].children[colorPos].value = '#000000';
+	funcList[0].children[showFuncPos].checked = false;
+	funcList[0].children[boldPos].checked = false;
 
 	for (; funcList.length > 1;) {
 		funcList[0].parentNode.removeChild(funcList[1]);
@@ -705,16 +696,6 @@ function showContextMenu(e, obj) {
 			icon: 'delete',
 			data: obj,
 		},
-		'formulaEditor': {
-			name: 'Formula Editor',
-			icon: 'edit',
-			data: obj,
-			disabled: function() {
-				/* enable when only select one text box */
-				return (obj.length != 1 ||
-					obj[0].name != 'textBox');
-			},
-		},
 	};
 	/* the position where the right-click menu is showed */
 	menuPos = {
@@ -731,13 +712,6 @@ function contextMenuClick(key) {
 			shapeLayer.remove(contextMenuItems[key].data[i]);
 			shapeLayer.discardActiveObject();
 			shapeLayer.requestRenderAll();
-	}
-	if (key == 'formulaEditor') {
-		let rCFE = $('#right-click-formula-editor');
-		/* show where the mouse is */
-		rCFE.css({ 'left': menuPos.x, 'top': menuPos.y - 50});
-		rCFE.show();
-		rCFE.load('https://localhost/../lib/rightClickFormulaEditor/index.html');
 	}
 }
 

@@ -1,7 +1,7 @@
 #draw-area {
 	position: relative;
 	float: left;
-	width: 1050px;
+	width: 890px;
 	height: 630px;
 	margin: 15px;
 	padding: 0;
@@ -22,7 +22,7 @@ canvas {
 	float: right;
 	background-color: white;
 	font-size: 14px;
-	width: 400px;
+	width: 560px;
 	height: 630px;
 	margin: 15px;
 	padding: 15px;
@@ -38,7 +38,7 @@ canvas {
 
 #toolbar {
 	width: auto;
-	height: 130px;
+	height: 100px;
 	margin: 0;
 	margin-bottom: 10px;
 	padding: 0;
@@ -49,7 +49,7 @@ canvas {
 
 #formula-editor {
 	width: auto;
-	height: 400px;
+	height: 460px;
 	overflow-y: auto;
 	margin: 0;
 	padding: 0;
@@ -70,16 +70,20 @@ canvas {
 }
 
 #formulas > .a-formula {
-	height: 30px;
+	padding: 3px;
+	height: 180px;
 	width: auto;
 }
 
-#formulas > .a-formula > p, #formula-editor > .x-range > p,
+#toolbar > p, #axis-range > p {
+	height: 30px;
+}
+
+#formulas > .a-formula, #formula-editor > .x-range > p,
 #formula-editor > #axis-range > p, #toolbar > p {
 	font-size: 15px;
 	position: relative;
 	float: left;
-	height: 30px;
 	line-height: 100%;
 	text-align: center;
 	margin: 0;
@@ -87,14 +91,14 @@ canvas {
 	padding: 5px 0;
 }
 
-#formulas > .a-formula > p > .btn:hover,
+#formulas > .a-formula > .btn:hover,
 #formula-editor > .btn:hover, #pen:hover, #eraser:hover {
 	background-color: #e74c3c;
 	color: white;
 	transition: all .3s ease;
 }
 
-#toolbar > p > .btn, #formulas > .a-formula > p > .btn,
+#toolbar > p > .btn, #formulas > .a-formula > .btn,
 #formula-editor > .btn {
 	display: inline-block;
 	position: relative;
@@ -128,18 +132,23 @@ canvas {
 	height: 30px;
 }
 
-#right-click-formula-editor {
-	background-color: white;
-	position: absolute;
-	margin: 0;
-	padding: 0;
-	width: 560px;
-	height: 300px;
-	border: 1px solid black;
-	border-radius: 4px;
-}
-
 .content {
 	border: 1px solid black;
 	border-radius: 2px;
+	float: left;
+}
+
+.editor {
+    width: 400px;
+    height: 50px;
+    padding: 0;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.extern-formula-editor {
+	width: 520px;
+	height: 150px;
+	border: 1px solid black;
+	border-radius: 3px;
 }
