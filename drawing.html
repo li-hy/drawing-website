@@ -17,7 +17,6 @@
 		<script type="text/javascript" defer="defer" src="lib/rightClickMenu/jquery.contextMenu.min.js"></script>
 		<script type="text/javascript" defer="defer" src="lib/rightClickMenu/jquery.ui.position.min.js"></script>
 		<script type="text/javascript" defer="defer" src="lib/formulaEditor/lib/mathquill-0.10.1/mathquill.js"></script>
-		<script type="text/javascript" defer="defer" src="lib/math.js"></script>
 		<script type="text/javascript" defer="defer" src="lib/latex-to-js.js"></script>
 		<script type="text/javascript" defer="defer" src="lib/fabric.js"></script>
 		<script type="text/javascript" defer="defer" src="scripts/formula.js"></script>
@@ -54,6 +53,9 @@
 				<canvas id="func-layer" style="z-index: 1" width="910" height="630"></canvas>
 				<canvas id="paint-layer" style="z-index: 2" width="910" height="630"></canvas>
 				<canvas id="shape-layer" style="z-index: 3" width="910" height="630"></canvas>
+				<div id="right-click-formula-editor" style="z-index: 6">
+					<iframe style="width: 100%; height: 100%" src="lib/formulaEditor/index.html"></iframe>
+				</div>
 				<div id="contextmenu-output"></div>
 			</div>
 
@@ -61,13 +63,13 @@
 				<h2>Function Panel</h2>
 				<div id="toolbar">
 					<h3>Toolbar</h3>
-					<p><button id="pen" class="btn" style="width: auto" title="Use pen" onclick="clickPaint(); setPen()">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" style="width: 100px"type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
-					<p><button id="eraser" class="btn" style="width: auto" title="Use eraser" onclick="clickPaint(); setEraser()">Eraser</button> 1<input id="eraser-size" style="width: 100px" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
+					<p><button id="pen" class="btn" style="width: auto" title="Use pen" onclick="setPen()">Pen</button> <input id="pen-color" type="color" style="width: 25px" title="Pen color"onchange="mouse.color = this.value"> 1<input id="pen-size" style="width: 100px"type="range" value="1" min="1" max="12" step="1" title="Pen thickness" onchange="mouse.penSize = parseInt(this.value)">12</p>
+					<p><button id="eraser" class="btn" style="width: auto" title="Use eraser" onclick="setEraser()">Eraser</button> 1<input id="eraser-size" style="width: 100px" type="range" value="1" min="1" max="30" step="1" title="Eraser thickness" onchange="mouse.eraserSize = parseInt(this.value)">30</p>
 					<p><button class="btn" title="Clear all tracks" onclick="clearAllTracks(paintCtx)">Clear tracks</button></p>
-					<p><button id="line" class="btn" title="Add a line" onclick="clickShape(); addLine(shapeLayer)">Line</button></p>
-					<p><button id="circle" class="btn" title="Add a circle" onclick="clickShape(); addCircle(shapeLayer, 50)">Circle</button></p>
-					<p><button id="rectangle" class="btn" title="Add a rectangle" onclick="clickShape(); addRectangle(shapeLayer, 100, 100)">Rect</button></p>
-					<p><button id="text-box" class="btn" title="Add a text box" onclick="clickShape(); addTextBox(shapeLayer)">Text box</button></p>
+					<p><button id="line" class="btn" title="Add a line" onclick="addLine(shapeLayer)">Line</button></p>
+					<p><button id="circle" class="btn" title="Add a circle" onclick="addCircle(shapeLayer, 50)">Circle</button></p>
+					<p><button id="rectangle" class="btn" title="Add a rectangle" onclick="addRectangle(shapeLayer, 100, 100)">Rect</button></p>
+					<p><button id="text-box" class="btn" title="Add a text box" onclick="addTextBox(shapeLayer)">Text box</button></p>
 				</div>
 				<div id="formula-editor">
 					<h3>Formula Editor</h3>
@@ -92,10 +94,11 @@
 					</button>
 					<div id="formulas">
 						<div class="a-formula">
-							<div class="extern-formula-editor">
-								<iframe id="editor" src="lib/formulaEditor/index.html" style="width: 100%; height: 100%"></iframe>
+							<div class="extern-formula-editor" style="float: left">
+								<iframe id="editor" src="lib/formulaEditor/myIndex.html" style="width: 100%; height: 100%"></iframe>
 							</div>
-							<input type="color" style="width: 25px" title="Line color" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)">
+							&nbsp;
+							<input type="color" style="width: 25px" title="Line color" style="display: inline" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)">
 							<input type="checkbox" title="Show this function" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);">on<input type="checkbox" title="Bold line" onchange="clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);"><b>B</b>
 							<button class="btn" title="Delete this function" onclick="deleteAFormula(funcCtx, axis, this.parentNode)">
 								Delete

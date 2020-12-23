@@ -71,7 +71,7 @@ canvas {
 
 #formulas > .a-formula {
 	padding: 3px;
-	height: 180px;
+	height: 112px;
 	width: auto;
 }
 
@@ -123,7 +123,7 @@ canvas {
 #formula-editor > .btn {
 	float: none;
 	padding: 3px;
-	margin: 3px 0;
+	margin: 3px 5px;
 }
 
 #formula-editor > #range {
@@ -139,16 +139,24 @@ canvas {
 }
 
 .editor {
-    width: 400px;
-    height: 50px;
     padding: 0;
     white-space: normal;
     word-break: break-all;
 }
 
 .extern-formula-editor {
-	width: 520px;
-	height: 150px;
+	width: 340px;
+	height: 100px;
+	border: 1px solid black;
+	border-radius: 3px;
+}
+
+#right-click-formula-editor {
+	display: none;
+	width: 500px;
+	height: 270px;
+	position: absolute;
+	background-color: white;
 	border: 1px solid black;
 	border-radius: 3px;
 }

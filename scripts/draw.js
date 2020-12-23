@@ -53,6 +53,10 @@ function setBtnColor(btn, press) {
 function setAllBtnColor() {
 	setBtnColor(idName('pen'), (mouse.status == mouseStatus.paint));
 	setBtnColor(idName('eraser'), (mouse.status == mouseStatus.erase));
+	if (mouse.status == mouseStatus.other)
+		clickShape();
+	else
+		clickPaint();
 }
 
 /* set status when click the button pen */
@@ -645,8 +649,6 @@ var mathField;
 
 window.onload = function() {
 	autoSetAxis(funcCtx, axis);
-	/* hide the right-click formula editor */
-	$('#right-click-formula-editor').hide();
 	/* add right-click event monitoring on the upper object of the
 	 * canvas
 	 */
@@ -695,6 +697,19 @@ function showContextMenu(e, obj) {
 			name: 'Delete',
 			icon: 'delete',
 			data: obj,
+			disabled: function() {
+				if (obj.length == 0)
+					return true;
+			}
+		},
+		'formula': {
+			name: 'Formula',
+			icon: 'edit',
+			data: obj,
+			disabled: function() {
+				if (obj.length != 1 || (obj[0].get('type') !== 'textbox' && obj[0].get('type') !== 'image'))
+					return true;
+			},
 		},
 	};
 	/* the position where the right-click menu is showed */
@@ -705,6 +720,9 @@ function showContextMenu(e, obj) {
 	$('#contextmenu-output').contextMenu(menuPos);
 }
 
+/* formula text */
+var fTxt;
+
 /* right-click function */
 function contextMenuClick(key) {
 	if (key == 'delete') {
@@ -712,6 +730,18 @@ function contextMenuClick(key) {
 			shapeLayer.remove(contextMenuItems[key].data[i]);
 			shapeLayer.discardActiveObject();
 			shapeLayer.requestRenderAll();
+	}
+	if (key == 'formula') {
+		if (contextMenuItems[key].data[0].get('type') === 'textbox') {
+			let fE = $('#right-click-formula-editor');
+			fE.css({'left': menuPos.x, 'top': menuPos.y - 40});
+			fE.show();
+		} else if (contextMenuItems[key].data[0].get('type') === 'image') {
+			let fE = $('#right-click-formula-editor');
+			fE.css({'left': menuPos.x, 'top': menuPos.y - 40});
+			fE.show();
+			fTxt = contextMenuItems[key].data[0].name;
+		}
 	}
 }
 
@@ -800,4 +830,17 @@ function addTextBox(layer) {
 	layer.add(textbox);
 	textbox.name = 'textBox';
 	layer.setActiveObject(textbox);
+}
+
+function addFormula(layer, src, fTxt) {
+	let setlectedObjs = layer.getActiveObjects();
+	layer.remove(setlectedObjs[0]);
+	layer.discardActiveObject();
+	layer.requestRenderAll();
+	fabric.Image.fromURL(src, function(img) {
+		let oImg = img.set({ left: menuPos.x, top: menuPos.y - 60 }).scale(0.5);
+		oImg.name = fTxt;
+		layer.add(oImg);
+		layer.setActiveObject(oImg);
+	});
 }

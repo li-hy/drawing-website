@@ -57,9 +57,10 @@ function input2FuncStr(f) {
 			funcStr += '*';
 			break;
 		case 'pow':	/* power */
-			funcStr += ('Math.pow' + op[i+1] + op[i+2] + op[i+3]
-				+ op[i+4] + op[i+5]);
-			i += 6;
+			funcStr += 'Math.pow';
+			while (op[++i] != ')')
+				funcStr += op[i];
+			--i;
 			break;
 		case 'ln':	/* ln */
 			funcStr += 'Math.log';
