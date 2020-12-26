@@ -23,7 +23,6 @@ function saveAsJson() {
 	saveObj.formula.grid = $('#grid')[0].checked;
 	let funcList = $('.a-formula');
 	let len = funcList.length;
-	saveObj.formula.formulaListLen = len;
 	saveObj.formula.formulaList = [];
 	for (let i = 0; i < len; ++i) {
 		saveObj.formula.formulaList.push({
@@ -75,6 +74,7 @@ function myLoad(filename) {
 	$.getJSON(filename, function(data) {
 		loadCanvas(shapeLayer, data.shape);
 		loadObj = data.formula;
+		console.log(loadObj);
 		$('#pen-color')[0].value = loadObj.penColor;
 		$('#pen-size')[0].value = loadObj.penSize;
 		$('#eraser-size')[0].value = loadObj.eraserSize;
@@ -82,8 +82,7 @@ function myLoad(filename) {
 		$('#x-right-value')[0].value = parseFloat(loadObj.xRightValue);
 		$('#y-left-value')[0].value = parseFloat(loadObj.yLeftValue);
 		$('#y-right-value')[0].value = parseFloat(loadObj.yRightValue);
-		$('#show-axis')[0].checked = loadObj.axis;
-		$('#grid')[0].checked = loadObj.grid;
+		$('#reset')[0].click();
 		for (let i = 0; i < loadObj.formulaList.length - 1; ++i)
 			$('#add-a-formula')[0].click();
 		let funcList = $('.a-formula');
@@ -98,6 +97,8 @@ function myLoad(filename) {
 				setTimeout(function() {
 					clearFuncLayer(funcCtx, axis);
 					resetAxis(funcCtx, axis);
+					$('#show-axis')[0].checked = loadObj.axis;
+					$('#grid')[0].checked = loadObj.grid;
 					let xLeftValue = idName('x-left-value').value;
 					let xRightValue = idName('x-right-value').value;
 					let yLeftValue = idName('y-left-value').value;
