@@ -90,26 +90,28 @@ function myLoad(filename) {
 		for (let i = 0; i < funcList.length; ++i) {
 			setTimeout(function() {
 				funcList[i].children[funcStrPos].children[0].contentWindow.mathField.write(loadObj.formulaList[i].funcStr);
-			}, 300);
+			}, 500);
 			funcList[i].children[colorPos].value = loadObj.formulaList[i].color;
 			funcList[i].children[showFuncPos].checked = loadObj.formulaList[i].show;
 			funcList[i].children[boldPos].checked = loadObj.formulaList[i].isBold;
+			if (i == funcList.length - 1) {
+				setTimeout(function() {
+					clearFuncLayer(funcCtx, axis);
+					resetAxis(funcCtx, axis);
+					let xLeftValue = idName('x-left-value').value;
+					let xRightValue = idName('x-right-value').value;
+					let yLeftValue = idName('y-left-value').value;
+					let yRightValue = idName('y-right-value').value;
+					axis.show = idName('show-axis').checked;
+					axis.displayGrid = idName('grid').checked;
+
+					setAxis(funcCtx, axis, canvasWidth, canvasHeight, xLeftValue, xRightValue,
+						yLeftValue, yRightValue);
+					drawAllFunc(funcCtx, axis);
+					showGrid(funcCtx, axis);
+					showAxis(funcCtx, axis);
+				}, 600);
+			}
 		}
 	});
-	setTimeout(function() {
-		clearFuncLayer(funcCtx, axis);
-		resetAxis(funcCtx, axis);
-		let xLeftValue = idName('x-left-value').value;
-		let xRightValue = idName('x-right-value').value;
-		let yLeftValue = idName('y-left-value').value;
-		let yRightValue = idName('y-right-value').value;
-		axis.show = idName('show-axis').checked;
-		axis.displayGrid = idName('grid').checked;
-
-		setAxis(funcCtx, axis, canvasWidth, canvasHeight, xLeftValue, xRightValue,
-			yLeftValue, yRightValue);
-		drawAllFunc(funcCtx, axis);
-		showGrid(funcCtx, axis);
-		showAxis(funcCtx, axis);
-	}, 1000);
 }

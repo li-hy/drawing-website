@@ -79,6 +79,12 @@ canvas {
 	height: 30px;
 }
 
+.save-load-btn {
+	float: right !important;
+	margin-left: -10px !important;
+	margin-right: 10px !important;
+}
+
 #formulas > .a-formula, #formula-editor > .x-range > p,
 #formula-editor > #axis-range > p, #toolbar > p {
 	font-size: 15px;
