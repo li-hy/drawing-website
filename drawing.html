@@ -72,7 +72,9 @@
 					<p><button id="circle" class="btn" title="Add a circle" onclick="addCircle(shapeLayer, 50)">Circle</button></p>
 					<p><button id="rectangle" class="btn" title="Add a rectangle" onclick="addRectangle(shapeLayer, 100, 100)">Rect</button></p>
 					<p><button id="text-box" class="btn" title="Add a text box" onclick="addTextBox(shapeLayer)">Text box</button></p>
-					<p><button id="save-btn" class="btn">Save</button></p>
+					<p><button id="save-btn" class="btn" onclick="mySave('save.json')" title="Save the current status">Save</button></p>
+					<p><button id="load-btn" class="btn" onclick="$('#load-file')[0].click()" title="Load a status">Load</button></p>
+					<input type="file" id="load-file" onchange="myLoad(this.value)" accept=".json" style="display: none">
 				</div>
 				<div id="formula-editor">
 					<h3>Formula Editor</h3>
@@ -86,7 +88,7 @@
 							<input id="grid" type="checkbox" title="Show grid" onchange="axis.displayGrid = this.checked; clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);">grid
 						</p>
 					</div>
-					<button class="btn" title="Add a function" onclick="addAFormula()">
+					<button class="btn" id="add-a-formula" title="Add a function" onclick="addAFormula()">
 						Add a formula
 					</button>
 					<button class="btn" title="Erase all function images" onclick="eraseAllFunc(funcCtx, axis)">

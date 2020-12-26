@@ -120,11 +120,6 @@ canvas {
 	transition: all .3s ease;
 }
 
-#save-btn, #load-btn {
-	position: relative;
-	float: right;
-}
-
 #formula-editor > .btn {
 	float: none;
 	padding: 3px;
