@@ -693,9 +693,27 @@ function onContextmenu(e) {
 /* show right-click menu */
 function showContextMenu(e, obj) {
 	contextMenuItems = {
+		'copy': {
+			name: 'Copy',
+			icon: 'fa-copy fa-lg',
+			data: obj,
+			disabled: function() {
+				if (obj.length == 0)
+					return true;
+			}
+		},
+		'paste': {
+			name: 'Paste',
+			icon: 'fa-paste fa-lg',
+			data: obj,
+			disabled: function() {
+				if (obj.length == 0)
+					return true;
+			}
+		},
 		'delete': {
 			name: 'Delete',
-			icon: 'delete',
+			icon: 'fa-trash-o fa-lg',
 			data: obj,
 			disabled: function() {
 				if (obj.length == 0)
@@ -704,7 +722,7 @@ function showContextMenu(e, obj) {
 		},
 		'formula': {
 			name: 'Formula',
-			icon: 'edit',
+			icon: 'fa-pencil fa-lg',
 			data: obj,
 			disabled: function() {
 				if (obj.length != 1 || (obj[0].get('type') !== 'textbox' && obj[0].get('type') !== 'image'))
@@ -725,6 +743,12 @@ var fTxt;
 
 /* right-click function */
 function contextMenuClick(key) {
+	if (key == 'copy') {
+		copy(shapeLayer);
+	}
+	if (key == 'paste') {
+		paste(shapeLayer);
+	}
 	if (key == 'delete') {
 		for (let i = 0; i < contextMenuItems[key].data.length; ++i)
 			shapeLayer.remove(contextMenuItems[key].data[i]);
@@ -817,9 +841,6 @@ function addTextBox(layer) {
 	let textbox = new fabric.Textbox('', {
 		left: 530,
 		top: 315,
-		borderColor: 'black',
-		editingBorderColor: 'blue',
-		fill: 'black',
 		width: 100,
 		height: 30,
 		lineHeight: 1.3,
@@ -842,5 +863,40 @@ function addFormula(layer, src, fTxt) {
 		oImg.name = fTxt;
 		layer.add(oImg);
 		layer.setActiveObject(oImg);
+	});
+}
+
+function copy(layer) {
+	layer.getActiveObject().clone(function(cloned) {
+		_clipboard = cloned;
+	});
+}
+
+function paste(layer) {
+	/* clone again, so can do multiple copies */
+	_clipboard.clone(function(clonedObj) {
+		layer.discardActiveObject();
+		clonedObj.set({
+			left: clonedObj.left + 10,
+			top: clonedObj.top + 10,
+			evented: true,
+		});
+		if (clonedObj.type === 'activeSelection') {
+			/* active selection needs a
+			 * reference to the layer
+			 */
+			clonedObj.canvas = layer;
+			clonedObj.forEachObject(function(obj) {
+				layer.add(obj);
+			});
+			/* this should solve the unselectability */
+			clonedObj.setCoords();
+		} else {
+			layer.add(clonedObj);
+		}
+		_clipboard.top += 10;
+		_clipboard.left += 10;
+		layer.setActiveObject(clonedObj);
+		layer.requestRenderAll();
 	});
 }
