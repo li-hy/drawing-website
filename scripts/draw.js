@@ -1,8 +1,8 @@
-/* need to contain jsxgraphcore.js and jsxgraph.css first */
-
 /* create two canvases for hand-paint and math functions */
 var paintLayer = idName('paint-layer');
 var funcLayer = idName('func-layer');
+
+/* the canvas's height and width */
 canvasWidth = paintLayer.getAttribute("width");
 canvasHeight = paintLayer.getAttribute('height');
 
@@ -15,28 +15,28 @@ if (funcLayer.getContext) {
 
 /* mouse status when drawing */
 var mouseStatus = {
-	paint:        0,	/* paint now */
-	erase:        1,	/* erase now */
-	other:        2
+	paint:        0,        /* paint now */
+	erase:        1,        /* erase now */
+	other:        2         /* the other */
 };
 
 /* create a mouse object for hand-paint */
 var mouse = new Object();
-mouse.status = mouseStatus.other;	/* mouse status */
-mouse.penSize = 1;		/* pen size */
-mouse.eraserSize = 1;		/* eraser size */
-mouse.hold = false;		/* is holding mouse now? */
-mouse.X = 0;			/* mouse x position */
-mouse.Y = 0;			/* mouse y position */
-mouse.color = '#000000';	/* mouse(pen only) color */
+mouse.status = mouseStatus.other;  /* mouse status */
+mouse.penSize = 1;                 /* pen size */
+mouse.eraserSize = 1;              /* eraser size */
+mouse.hold = false;                /* is holding mouse now? */
+mouse.X = 0;                       /* mouse x position */
+mouse.Y = 0;                       /* mouse y position */
+mouse.color = '#000000';           /* mouse color(only use for pen) */
 const rect = paintLayer.getBoundingClientRect();
 
-/* get the objects by id */
+/* get the objects by id, return the matching object */
 function idName(name) {
 	return document.getElementById(name);
 }
 
-/* get the objects by class name */
+/* get the objects by class name, return the matching object */
 function className(name) {
 	return document.getElementsByClassName(name);
 }
@@ -49,33 +49,40 @@ function setBtnColor(btn, press) {
 		btn.style.backgroundColor = '#3d4450';
 }
 
-/* set all buttons' color */
+/*
+ * set all buttons' color and select which
+ * canvas the mouse can click on
+ */
 function setAllBtnColor() {
 	setBtnColor(idName('pen'), (mouse.status == mouseStatus.paint));
-	setBtnColor(idName('eraser'), (mouse.status == mouseStatus.erase));
+	setBtnColor(idName('eraser'),
+		(mouse.status == mouseStatus.erase));
 	if (mouse.status == mouseStatus.other)
 		clickShape();
 	else
 		clickPaint();
 }
 
-/* set status when click the button pen */
+/* set mosue status when click the button pen */
 function setPen() {
 	mouse.status = (mouse.status == mouseStatus.paint) ?
 		mouseStatus.other : mouseStatus.paint;
 	setAllBtnColor();
 }
 
-/* set status when click the button eraser */
+/* set mouse status when click the button eraser */
 function setEraser() {
 	mouse.status = (mouse.status == mouseStatus.erase) ?
 		mouseStatus.other : mouseStatus.erase;
 	setAllBtnColor();
 }
 
+/* add mouse down listener event on the hand-paint layer */
 paintLayer.addEventListener('mousedown', e => {
+	/* the position of the mouse */
 	mouse.X = e.clientX - rect.left;
 	mouse.Y = e.clientY - rect.top;
+	/* set mouse actions according to the status */
 	switch (mouse.status) {
 	case mouseStatus.paint:
 		drawDot(paintCtx, mouse.X, mouse.Y, mouse.color,
@@ -88,13 +95,18 @@ paintLayer.addEventListener('mousedown', e => {
 	default:
 		break;
 	}
+	/* mouse down */
 	mouse.hold = true;
 })
 
+/* add moving mouse listener event on the hand-paint layer */
 paintLayer.addEventListener('mousemove', e => {
+	/* hold and move the mouse */
 	if (mouse.hold) {
+		/* the current position of the mouse */
 		let curMouseX = e.clientX - rect.left
 		let curMouseY = e.clientY - rect.top;
+		/* set mouse actions according to the status */
 		switch (mouse.status) {
 		case mouseStatus.paint:
 			drawLine(paintCtx, mouse.X, mouse.Y,
@@ -114,10 +126,14 @@ paintLayer.addEventListener('mousemove', e => {
 	}
 })
 
+/* add release mouse listener event on the hand-paint layer */
 paintLayer.addEventListener('mouseup', e => {
+	/* release the mouse */
 	if (mouse.hold == true) {
+		/* the current position of the mouse */
 		let curMouseX = e.clientX - rect.left
 		let curMouseY = e.clientY - rect.top;
+		/* set mouse actions according to the status */
 		switch (mouse.status) {
 		case mouseStatus.paint:
 			drawDot(paintCtx, curMouseX, curMouseY,
@@ -131,10 +147,18 @@ paintLayer.addEventListener('mouseup', e => {
 			break;
 		}
 	}
+	/* release the mouse */
 	mouse.hold = false;
 })
 
-/* draw a dot in the canvas */
+/*
+ * draw a dot in the canvas
+ * @ctx      : canvas to be painted
+ * @x        : dot's x coordinate
+ * @y        : dot's y coordinate
+ * @color    : dot's color
+ * @size     : dot's diameter
+ */
 function drawDot(ctx, x, y, color = '#000000', size = 1) {
 	ctx.beginPath();
 	size /= 2;
@@ -143,13 +167,26 @@ function drawDot(ctx, x, y, color = '#000000', size = 1) {
 	ctx.fill();
 }
 
-/* erase a square in the canvas */
+/*
+ * erase a square area in the canvas
+ * @ctx      : the canvas to be erased
+ * @x        : the x coordinate of the square center
+ * @y        : the y coordinate of the square center
+ * @size     : square's side length
+ */
 function eraseSquare(ctx, x, y, size = 1) {
 	ctx.clearRect(x - size / 2, y - size / 2, size, size);
 }
 
-/* draw a line in the canvas */
+/*
+ * draw a line in the canvas
+ * @ctx             : the canvas to be painted
+ * @x1, x2, y1, y2  : the x and y coordinates of the end of line
+ * @color           : the color of line
+ * @size            : theckness of the line
+ */
 function drawLine(ctx, x1, y1, x2, y2, color = '#000000', size = 1) {
+	/* if (x1, y1) and (x2, y2) aren't the same dot, draw a line */
 	if (x1 != x2 || y1 != y2) {
 		ctx.strokeStyle = color;
 		ctx.lineWidth = size;
@@ -158,28 +195,37 @@ function drawLine(ctx, x1, y1, x2, y2, color = '#000000', size = 1) {
 		ctx.moveTo(x1, y1);
 		ctx.lineTo(x2, y2);
 		ctx.stroke();
-	} else {
+	} else { /* (x1, y1) and (x2, y2) are the same dot */
 		drawDot(ctx, x1, y1, color, size);
 	}
 }
 
-/* erase a line in the canvas */
+/*
+ * erase a line on the canvas
+ * @ctx             : the canvas to be erased
+ * @x1, y1, x2, y2  : the coordinate of the end of line
+ * @size            : the theckness of the line
+ */
 function eraseLine(ctx, x1, y1, x2, y2, size = 1) {
+	/* (x1, y1), (x2, y2) aren't the same dot */
 	if (x1 != x2 || y1 != y2) {
 		let dx = x1 - x2;
 		let dy = y1 - y2;
-		if (dx == 0) {
+		if (dx == 0) { /* slope is infinite */
 			let yMin = (y1 < y2) ? y1 : y2;
 			for (let i = 0; i <= Math.abs(dy); ++i)
 				eraseSquare(ctx, x1, yMin + i, size);
-		} else if (dy == 0) {
+		} else if (dy == 0) { /* slope is 0 */
 			let xMin = (x1 < x2) ? x1 : x2;
 			for (let i = 0; i <= Math.abs(dx); ++i)
 				eraseSquare(ctx, y1, xMin + i, size);
-		} else {
+		} else { /* slope is not 0 or infinite */
 			let k = dy / dx;
 			let x, y;
 			let x0, y0;
+			/* erase as manay point as possible
+			 * to ensure accuracy
+			 */
 			if (Math.abs(dx) >= Math.abs(dy)) {
 				if (x1 < x2) {
 					x0 = x1;
@@ -208,42 +254,55 @@ function eraseLine(ctx, x1, y1, x2, y2, size = 1) {
 				}
 			}
 		}
+	} else { /* (x1, y1) and (x2, y2) are the same dot */
+		eraseSquare(ctx, x1, y1, size);
 	}
 }
 
+/*
+ * clear all tracks on the canvas
+ * @ctx      : canvas
+ */
 function clearAllTracks(ctx) {
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 }
 
+/* the axis object, use to record the status of axis */
 var axis = new Object();
-axis.set = false;
-axis.xLeftRange = 0;
-axis.yRightRange = 0;
+axis.set = false;         /* has the axis be set? */
+/* the distance between the coordinate axis and the edge of the cnvas */
 axis.blank = 0;
+/* show the axis? */
 axis.show = false;
+/* display the grid? */
 axis.displayGrid = false;
-axis.maxXDivision = 20;	/* max number of division of x axis */
-axis.maxYDivision = 10;	/* max number of division of y axis */
-/* value of division */
+axis.maxXDivision = 20;   /* max number allowed of division of x axis */
+axis.maxYDivision = 10;   /* max number allowed of division of y axis */
+/* value of divisions */
 axis.xDivision = [];
 axis.yDivision = [];
 
 /* blank between function image and axis */
-funcBlank = 5;
+var funcBlank = 3;
 
-/* const parameter, some options' positions in the function area */
+/* const parameter, some options' positions in the function area in the
+ * file drawing.html, if it is changed, check here please
+ */
 /* function expression string */
 var funcStrPos = 0;
-/* color option */
+/* color */
 var colorPos = 1;
 /* show this function? */
 var showFuncPos = 2;
-/* bold line */
+/* bold line? */
 var boldPos = 3;
 
-/* set division of x axis */
+/*
+ * set division of x axis
+ * @axis   : the axis object
+ */
 function setAxisDivision(axis) {
-	/* clear x and y division */
+	/* reset x and y division */
 	axis.xDivision.length = 0;
 	axis.yDivision.length = 0;
 
@@ -255,6 +314,7 @@ function setAxisDivision(axis) {
 		axis.maxXDivision;
 	yMax = (axis.dy <= axis.maxYDivision) ? axis.dy :
 		axis.maxYDivision;
+	/* interval size */
 	xStep = (axis.width - 2 * axis.blank) / xMax;
 	yStep = (axis.height - 2 * axis.blank) / yMax;
 
@@ -266,6 +326,7 @@ function setAxisDivision(axis) {
 		axis.yDivision.push(y - i * yStep);
 }
 
+/* return a random color */
 function getRandomColor() {
 	let color = '#';
 	while (color.length < 7)
@@ -273,19 +334,37 @@ function getRandomColor() {
 	return color;
 }
 
-/* set origin */
+/*
+ * set origin of the canvas
+ * @ctx      : canvas corresponding to the axis
+ * @axis     : axis
+ */
 function setOrigin(ctx, axis) {
 	ctx.translate(-1 * axis.xLeftRange + axis.blank,
 		-1 * axis.yRightRange + axis.blank);
 }
 
-/* reset origin */
+/*
+ * reset origin
+ * @ctx      : canvas corresponding to the axis
+ * @axis     : axis
+ */
 function resetOrigin(ctx, axis) {
 	ctx.translate(axis.xLeftRange - axis.blank,
 		axis.yRightRange - axis.blank);
 }
 
-/* set axis objects */
+/*
+ * set axis objects
+ * @ctx            : canvas corresponding to the axis
+ * @axis           : axis
+ * @width          : width of the canvas
+ * @height         : height of the canvas
+ * @xLeftValue     : x-axis starting point
+ * @xRightValue    : x-axis end point
+ * @yLeftValue     : y-axis starting point
+ * @yRightValue    : y-axis starting point
+ */
 function setAxis(ctx, axis, width, height, xLeftValue, xRightValue,
 	yLeftValue, yRightValue) {
 	/* canvas size */
@@ -298,21 +377,26 @@ function setAxis(ctx, axis, width, height, xLeftValue, xRightValue,
 	axis.yLeftValue = parseFloat(yLeftValue);
 	axis.yRightValue = parseFloat(yRightValue);
 
-	/* cordinate scaling, leaving some blank areas */
+	/* coordinate scaling, leaving some blank areas */
 	axis.blank = 30;
 	axis.dx = xRightValue - xLeftValue;
 	axis.dy = yRightValue - yLeftValue;
 	axis.xScale = (width - 2 * axis.blank) / axis.dx;
 	axis.yScale = (height - 2 * axis.blank) / axis.dy;
 
-	/* set the axis range on the canvas, leaving some blank areas */
-	axis.xLeftRange = xLeftValue / axis.dx * (width - 2 * axis.blank);
-	axis.xRightRange = xRightValue / axis.dx * (width - 2 * axis.blank);
+	/* set the axis pixel range on the canvas,
+	 * leaving some blank areas
+	 */
+	axis.xLeftRange = xLeftValue / axis.dx *
+		(width - 2 * axis.blank);
+	axis.xRightRange = xRightValue / axis.dx *
+		(width - 2 * axis.blank);
 	axis.yLeftRange = -1 * yLeftValue / axis.dy *
 		(height - 2 * axis.blank);
 	axis.yRightRange = -1 * yRightValue / axis.dy *
 		(height - 2 * axis.blank);
 
+	/* set division of axis */
 	setAxisDivision(axis);
 
 	/* set origin */
@@ -322,7 +406,11 @@ function setAxis(ctx, axis, width, height, xLeftValue, xRightValue,
 	axis.set = true;
 }
 
-/* reset axis objects */
+/*
+ * reset axis objects
+ * @ctx      : canvas corresponding to the axis
+ * @axis     : axis
+ */
 function resetAxis(ctx, axis) {
 	/* reset origin */
 	resetOrigin(ctx, axis);
@@ -337,14 +425,14 @@ function resetAxis(ctx, axis) {
 	axis.yLeftValue = 0;
 	axis.yRightValue = 0;
 
-	/* cordinate scaling, leaving some blank areas */
+	/* reset the blank and coordinate scaling */
 	axis.blank = 0;
 	axis.dx = 0;
 	axis.dy = 0;
 	axis.xScale = 0;
 	axis.yScale = 0;
 
-	/* set the axis range on the canvas, leaving some blank areas */
+	/* rest set the axis range on the canvas */
 	axis.xLeftRange = 0;
 	axis.xRightRange = 0;
 	axis.yLeftRange = 0;
@@ -354,8 +442,13 @@ function resetAxis(ctx, axis) {
 	axis.set = false;
 }
 
-/* auto set axis after web page loaded */
+/*
+ * auto set axis after web page loaded
+ * @ctx        : canvas corresponding to the axis
+ * @axis       : axis
+ */
 function autoSetAxis(ctx, axis) {
+	/* get the user specified axis range */
 	let xLeftValue = idName('x-left-value').value;
 	let xRightValue = idName('x-right-value').value;
 	let yLeftValue = idName('y-left-value').value;
@@ -365,7 +458,14 @@ function autoSetAxis(ctx, axis) {
 		yLeftValue, yRightValue);
 }
 
-/* draw a triangle with the coordinates of it's three vertices */
+/*
+ * draw a triangle with the coordinates of it's three vertices
+ * @ctx                    : canvas to be painted
+ * @x1, y1, x2, y2, x3, y3 : coordinates of the triangle
+ * @isFill                 : need to fill?
+ * @color                  : color of the triangle
+ * @size                   : line theckness of the triangle
+ */
 function drawTriangle(ctx, x1, y1, x2, y2, x3, y3,
 	isFill = false, color = '#000000', size = 1) {
 	ctx.beginPath();
@@ -383,8 +483,16 @@ function drawTriangle(ctx, x1, y1, x2, y2, x3, y3,
 	}
 }
 
-/* draw a equilateral triangle with the center and radius of it's
+/*
+ * draw a equilateral triangle with the center and radius of it's
  * circumcircle, then rotate it @rotate * pi / 4
+ * @ctx         : canvas to be painted
+ * @x, y        : coordinates of the equilateral triangle's center
+ * @raduis      : radius of it's circumcircle
+ * @ifFill      : need to fill?
+ * @rotate      : the number of pi/4 to rotate
+ * @color       : color
+ * @size        : line theckness
  */
 function drawEquilateralTriangle(ctx, x, y, radius,
 	isFill = false, rotate = 0, color = '#000000', size = 1) {
@@ -399,7 +507,11 @@ function drawEquilateralTriangle(ctx, x, y, radius,
 		drawTriangle(ctx, x1, y1, x2, y2, x3, y3, isFill, color, size);
 	} else if (rotate > 0){
 		ctx.save();
+		/* move the canvas origin to the
+		 * center of the triangle
+		 */
 		ctx.translate(x, y);
+		/* rotate the canvas */
 		for (; rotate > 0; --rotate)
 			ctx.rotate(Math.PI / 2);
 		x1 = 0;
@@ -415,7 +527,14 @@ function drawEquilateralTriangle(ctx, x, y, radius,
 	}
 }
 
+/*
+ * draw the axis
+ * @ctx      : canvas to be painted
+ * @axis     : axis
+ * @color    : color of the axis
+ */
 function drawAxis(ctx, axis, color = '#000000') {
+	/* axis font parameter */
 	ctx.font = "normal 12px serif";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
@@ -443,7 +562,7 @@ function drawAxis(ctx, axis, color = '#000000') {
 	}
 	ctx.fillText('x', axis.xRightRange + axis.blank - 10, ty);
 
-	/* y axis */
+	/* draw y axis */
 	drawLine(ctx, axis.xLeftRange, axis.yLeftRange,
 		axis.xLeftRange, axis.yRightRange - axis.blank + 5,
 		color, lineSize);
@@ -462,18 +581,28 @@ function drawAxis(ctx, axis, color = '#000000') {
 	ctx.fillText('y', tx, axis.yRightRange - axis.blank + 10);
 }
 
-/* clear the function layer */
+/*
+ * clear the function layer
+ * @ctx    : the function canvas
+ * @axis   : axis
+ */
 function clearFuncLayer(ctx, axis) {
 	ctx.clearRect(axis.xLeftRange - axis.blank, axis.yRightRange - axis.blank,
 		canvasWidth, canvasHeight);
 }
 
+/*
+ * draw axis on the canvas
+ * @ctx      : canvas to be painted
+ * @axis     : axis
+ * @color    : color of the axis
+ */
 function showAxis(ctx, axis, color = '#000000') {
-	if (!axis.show)
+	if (!axis.show) /* do not show axis */
 		return;
-	if (axis.set) {
+	if (axis.set) { /* have set axis */
 		drawAxis(ctx, axis, color);
-	} else {
+	} else {        /* haven't set axis */
 		let xLeftValue = idName('x-left-value').value;
 		let xRightValue = idName('x-right-value').value;
 		let yLeftValue = idName('y-left-value').value;
@@ -485,11 +614,16 @@ function showAxis(ctx, axis, color = '#000000') {
 	}
 }
 
-/* show grid on axis */
+/*
+ * show grid on axis
+ * @ctx      : canvas to be painted
+ * @axis     : axis
+ * @color    : color of the grid
+ */
 function showGrid(ctx, axis, color = '#000000') {
-	if (!axis.displayGrid)
+	if (!axis.displayGrid) /* do not show grid */
 		return;
-	if (!axis.set) {
+	if (!axis.set) {       /* haven't set axis */
 		alert('You must set AXIS first!');
 		return;
 	}
@@ -508,16 +642,26 @@ function showGrid(ctx, axis, color = '#000000') {
 	}
 }
 
+/*
+ * draw a function on canvas
+ * @ctx       : canvas to be painted
+ * @axis      : axis
+ * @color     : color of the function image
+ * @funcStr   : the function expression string
+ * @show      : need to show?
+ * @blod      : need to blod the line?
+ */
 function drawFunc(ctx, axis, color, funcStr, show = false, blod = false) {
-	if (!show) {
+	if (!show) {              /* do now show */
 		return;
-	} else if (blod){
+	} else if (blod){         /* need to blod the line */
 		lineSize = 4;
-	} else {
+	} else {                  /* don't need to blod the line */
 		lineSize = 2;
 	}
-	if (funcStr.length == 0)	/* input is null */
+	if (funcStr.length == 0)  /* input is null */
 		return;
+	/* transfrom the function expression string to a function */
 	funcStr = input2FuncStr(funcStr);
 	let func = str2Func(funcStr);
 	/* define the drawing range */
@@ -526,20 +670,26 @@ function drawFunc(ctx, axis, color, funcStr, show = false, blod = false) {
 	/* yLeftRange is pos and yRightRange is neg */
 	let yLeft = axis.yLeftRange - funcBlank;
 	let yRight = axis.yRightRange + funcBlank;
-	let yb, yc;
+	let yc, yb; /* the current point and the point before it */
 	for (let x = xLeft; x <= xRight; ++x) {
 		yb = -1 * axis.yScale * func((x - 1) / axis.xScale);
 		yc = -1 * axis.yScale * func(x / axis.xScale);
-		/* yLeft is pos and yRight is neg */
+		/* ensure the function image does not exceed the axis
+		 * area, yLeft is pos and yRight is neg
+		 */
 		if (yb <= yLeft && yb >= yRight &&
 			yc <= yLeft && yc >= yRight)
 			drawLine(ctx, (x - 1), yb, x, yc, color, lineSize);
 	}
 }
 
-/* draw all functions */
+/*
+ * draw all functions
+ * @ctx   : canvas to be painted
+ * @axis  : axis
+ */
 function drawAllFunc(ctx, axis) {
-	if (!axis.set) {
+	if (!axis.set) { /* haven't set the axis */
 		alert('You must set AXIS first!');
 		return;
 	}
@@ -553,11 +703,16 @@ function drawAllFunc(ctx, axis) {
 	}
 }
 
-/* change axis */
+/*
+ * change axis
+ * @ctx    : canvas corresponding to the axis
+ * @axis   : axis
+ */
 function changeAxis(ctx, axis) {
 	clearFuncLayer(ctx, axis);
 	resetAxis(ctx, axis);
 
+	/* get the user specified axis range */
 	let xLeftValue = idName('x-left-value').value;
 	let xRightValue = idName('x-right-value').value;
 	let yLeftValue = idName('y-left-value').value;
@@ -570,7 +725,11 @@ function changeAxis(ctx, axis) {
 	showAxis(ctx, axis);
 }
 
-/* erase all functions' images */
+/*
+ * erase all functions' images
+ * @ctx       : canvas corresponding to the axis
+ * @axis      : axis
+ */
 function eraseAllFunc(ctx, axis) {
 	clearFuncLayer(ctx, axis);
 
@@ -596,9 +755,9 @@ function addAFormula() {
 /* delete a formula from formula editor area */
 function deleteAFormula(ctx, axis, aFormula) {
 	clearFuncLayer(ctx, axis);
-	if (className('a-formula').length > 1) {
+	if (className('a-formula').length > 1) {  /* delete it */
 		aFormula.parentNode.removeChild(aFormula);
-	} else {
+	} else {   /* it's the only formula, reset it */
 		aFormula.children[colorPos].value = '#000000';
 		aFormula.children[showFuncPos].checked = false;
 		aFormula.children[boldPos].checked = false;
@@ -608,44 +767,44 @@ function deleteAFormula(ctx, axis, aFormula) {
 	drawAllFunc(ctx, axis);
 }
 
-/* reset the funcion editor setting */
+/*
+ * reset the funcion editor setting
+ * @ctx    : canvas corresponding to the axis
+ * @axis   : axis
+ */
 function resetFunc(ctx, axis) {
 	idName('show-axis').checked = false;
 	idName('grid').checked = false;
-	funcList = className('a-formula');
+	let funcList = className('a-formula');
 
 	funcList[0].children[colorPos].value = '#000000';
 	funcList[0].children[showFuncPos].checked = false;
 	funcList[0].children[boldPos].checked = false;
 
-	for (; funcList.length > 1;) {
+	for (; funcList.length > 1;) { /* funcList change in real time */
 		funcList[0].parentNode.removeChild(funcList[1]);
 	}
 
 	clearFuncLayer(ctx, axis);
 }
 
-/* add operator to the end of function expression */
-function addOperator(func) {
-	func.children[funcStrPos].value += func.children[opPos].value;
-}
-
+/* let the mouse click on hand-paint canvas */
 function clickPaint() {
 	idName('paint-layer').style.pointerEvents = 'auto';
 	idName('shape-layer').style.pointerEvents = 'none';
 	className('upper-canvas')[0].style.pointerEvents = 'none';
 }
 
+/* let the mouse click on shape canvas */
 function clickShape() {
 	idName('shape-layer').style.pointerEvents = 'auto';
 	className('upper-canvas')[0].style.pointerEvents = 'auto';
 	idName('paint-layer').style.pointerEvents = 'none';
 }
 
-var shapeLayer; /* shape canvas */
-var contextMenuItems; /* menu item */
-var menuPos;    /* menu position */
-var mathField;
+var shapeLayer;        /* shape canvas */
+var contextMenuItems;  /* menu item */
+var menuPos;           /* menu position */
 
 window.onload = function() {
 	autoSetAxis(funcCtx, axis);
@@ -653,9 +812,10 @@ window.onload = function() {
 	 * canvas
 	 */
 	shapeLayer = new fabric.Canvas('shape-layer');
+	$(".upper-canvas").contextmenu(onContextmenu);
+	/* use the shape center coordinates to create it */
 	fabric.Object.prototype.originX = 'center';
 	fabric.Object.prototype.originY = 'center';
-	$(".upper-canvas").contextmenu(onContextmenu);
 
 	/* initialize the right-click menu */
 	$.contextMenu({
@@ -725,7 +885,10 @@ function showContextMenu(e, obj) {
 			icon: 'fa-pencil fa-lg',
 			data: obj,
 			disabled: function() {
-				if (obj.length != 1 || (obj[0].get('type') !== 'textbox' && obj[0].get('type') !== 'image'))
+				if (obj.length != 1 ||
+					(obj[0].get('type') !==
+					'textbox' &&
+					obj[0].get('type') !== 'image'))
 					return true;
 			},
 		},
@@ -750,26 +913,32 @@ function contextMenuClick(key) {
 		paste(shapeLayer);
 	}
 	if (key == 'delete') {
-		for (let i = 0; i < contextMenuItems[key].data.length; ++i)
+		for (let i = 0;
+			i < contextMenuItems[key].data.length; ++i)
 			shapeLayer.remove(contextMenuItems[key].data[i]);
-			shapeLayer.discardActiveObject();
-			shapeLayer.requestRenderAll();
+		shapeLayer.discardActiveObject();
+		shapeLayer.requestRenderAll();
 	}
 	if (key == 'formula') {
-		if (contextMenuItems[key].data[0].get('type') === 'textbox') {
+		if (contextMenuItems[key].data[0].get('type')
+			=== 'textbox') {
 			let fE = $('#right-click-formula-editor');
-			fE.css({'left': menuPos.x, 'top': menuPos.y - 40});
+			fE.css({'left': menuPos.x,
+				'top': menuPos.y - 40});
 			fE.show();
-		} else if (contextMenuItems[key].data[0].get('type') === 'image') {
+		} else if (contextMenuItems[key].data[0].get('type')
+			=== 'image') {
 			let fE = $('#right-click-formula-editor');
-			fE.css({'left': menuPos.x, 'top': menuPos.y - 40});
+			fE.css({'left': menuPos.x,
+				'top': menuPos.y - 40});
 			fE.show();
 			fTxt = contextMenuItems[key].data[0].name;
 		}
 	}
 }
 
-/* add a rectangle to the layer
+/*
+ * add a rectangle to the canvas layer
  * @layer       : layer used to add a rectangle
  * @w           : rectangle's width
  * @h           : rectangle's height
@@ -793,7 +962,8 @@ function addRectangle(layer, w, h, borderColor = 'black',
 	rectangle.name = 'shape';
 }
 
-/* add a circle to the layer
+/*
+ * add a circle to the canvas layer
  * @layer         : layer used to add a circle
  * @r             : radius of the circle
  * @borderColor   : border color of the circle
@@ -815,7 +985,8 @@ function addCircle(layer, r, borderColor = 'black',
 	circle.name = 'shape';
 }
 
-/* add a line to the layer
+/*
+ * add a line to the canvas layer
  * @layer         : layer used to add a line
  * @lineColor     : color of the line
  */
@@ -832,7 +1003,8 @@ function addLine(layer, lineColor = 'black') {
 	line.name = 'shape';
 }
 
-/* add a text box to the layer
+/*
+ * add a text box to the canvas layer
  * @layer         : layer used to add a text box
  */
 function addTextBox(layer) {
@@ -853,25 +1025,43 @@ function addTextBox(layer) {
 	layer.setActiveObject(textbox);
 }
 
+/*
+ * add a formula image to the canvas layer
+ * @layer     : layer used to add formula
+ * @src       : the image source url
+ * @fTxt      : the function expression text
+ */
 function addFormula(layer, src, fTxt) {
+	/* remove the text box */
 	let setlectedObjs = layer.getActiveObjects();
 	layer.remove(setlectedObjs[0]);
 	layer.discardActiveObject();
 	layer.requestRenderAll();
+
+	/* add the formula image */
 	fabric.Image.fromURL(src, function(img) {
-		let oImg = img.set({ left: menuPos.x, top: menuPos.y - 60 }).scale(0.5);
+		let oImg = img.set({ left: menuPos.x,
+			top: menuPos.y - 60 }).scale(0.5);
 		oImg.name = fTxt;
 		layer.add(oImg);
 		layer.setActiveObject(oImg);
 	});
 }
 
+/*
+ * copy the selected objects
+ * @layer    : the canvas corresponding to the objects
+ */
 function copy(layer) {
 	layer.getActiveObject().clone(function(cloned) {
 		_clipboard = cloned;
 	});
 }
 
+/*
+ * paste the copied objects to the canvas layer
+ * @layer    : the canvas used to paste
+ */
 function paste(layer) {
 	/* clone again, so can do multiple copies */
 	_clipboard.clone(function(clonedObj) {

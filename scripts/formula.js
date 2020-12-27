@@ -2,12 +2,14 @@
 var avail = ['', 'x', '+', '-', '*', '/', 'pow', '(', ')', ',', 'sqrt',
 	'log2', 'log_2', 'ln', 'lg', 'log10', 'log_10', 'sin', 'cos'];
 
-/* get input infomation by name */
+/* get input infomation by name @name */
 function getInput(name) {
 	return document.getElementsByName(name)[0].children[0];
 }
 
+/* preprocess the function expression string @s */
 function preprocessStr(s) {
+	/* remove the blackslash and space */
 	let blank = new RegExp('[ \\\\]', 'g');
 	let tmp = s.split(blank);
 	s = '';
@@ -15,6 +17,8 @@ function preprocessStr(s) {
 		if (tmp[i] != ' ')
 			s += tmp[i];
 	}
+
+	/* replace dot with mutiply */
 	let mutiply = new RegExp('(cdot)');
 	tmp = s.split(mutiply);
 	s = '';
@@ -40,7 +44,7 @@ function check(s) {
 	return true;
 }
 
-/* convert input text to function string, return a string */
+/* convert input text @f to function string, return a string */
 function input2FuncStr(f) {
 	f = latex_to_js(f);
 	f = preprocessStr(f);	/* preprocess the string */
@@ -50,12 +54,12 @@ function input2FuncStr(f) {
 		alert('Error: the function expression is wrong.');
 		return;
 	}
+	/* transform the function expression string to
+	 * JavaScript expression
+	 */
 	let funcStr = '';
 	for (let i = 0; i < op.length; ++i) {
 		switch (op[i]) {
-		case 'cdot':    /* mutiply */
-			funcStr += '*';
-			break;
 		case 'pow':	/* power */
 			funcStr += 'Math.pow';
 			while (op[++i] != ')')
@@ -91,7 +95,7 @@ function input2FuncStr(f) {
 	return funcStr;
 }
 
-/* create function from string */
+/* create function from JavaScript expression @s */
 function str2Func(s) {
 	str = 'return (' + s + ')';
 	return Function('x', str);

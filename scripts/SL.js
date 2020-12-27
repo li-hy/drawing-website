@@ -5,7 +5,7 @@
 /* the object used to save */
 var saveObj = {};
 saveObj.formula = {};
-/* the json of the available save */
+/* the json of the variable save */
 var saveJson = {};
 
 /*
@@ -54,23 +54,32 @@ function loadCanvas(canvas, json) {
 
 /*
  * save
+ * ATTENTION: the file must be save in the save directory under the
+ * root directory
+ * @filename   : the name of the save file
  */
 function mySave(filename) {
 	saveAsJson();
-	let blob = new Blob([saveJson], {type: 'text/plain;charset=utf-8'});
+	let blob = new Blob([saveJson],
+		{type: 'text/plain;charset=utf-8'});
 	saveAs(blob, filename);
 }
 
 /*
  * load
+ * ATTENTION: only can load the file in the save directory under the
+ *            root directory
+ * @filename    : the name of the save file
  */
 function myLoad(filename) {
 	let loadObj;
 
+	/* get the file name */
 	let slash = new RegExp('\\\\');
 	filename = filename.split(slash);
 	filename = filename[filename.length - 1];
 	filename = 'save/' + filename;
+
 	$.getJSON(filename, function(data) {
 		loadCanvas(shapeLayer, data.shape);
 		loadObj = data.formula;
@@ -78,35 +87,58 @@ function myLoad(filename) {
 		$('#pen-color')[0].value = loadObj.penColor;
 		$('#pen-size')[0].value = loadObj.penSize;
 		$('#eraser-size')[0].value = loadObj.eraserSize;
-		$('#x-left-value')[0].value = parseFloat(loadObj.xLeftValue);
-		$('#x-right-value')[0].value = parseFloat(loadObj.xRightValue);
-		$('#y-left-value')[0].value = parseFloat(loadObj.yLeftValue);
-		$('#y-right-value')[0].value = parseFloat(loadObj.yRightValue);
+		$('#x-left-value')[0].value =
+			parseFloat(loadObj.xLeftValue);
+		$('#x-right-value')[0].value =
+			parseFloat(loadObj.xRightValue);
+		$('#y-left-value')[0].value =
+			parseFloat(loadObj.yLeftValue);
+		$('#y-right-value')[0].value =
+			parseFloat(loadObj.yRightValue);
 		$('#reset')[0].click();
 		for (let i = 0; i < loadObj.formulaList.length - 1; ++i)
 			$('#add-a-formula')[0].click();
 		let funcList = $('.a-formula');
 		for (let i = 0; i < funcList.length; ++i) {
+			/* delay 500ms to wait for the formula editor
+			 * to initialize
+			 */
 			setTimeout(function() {
 				funcList[i].children[funcStrPos].children[0].contentWindow.mathField.write(loadObj.formulaList[i].funcStr);
 			}, 500);
-			funcList[i].children[colorPos].value = loadObj.formulaList[i].color;
-			funcList[i].children[showFuncPos].checked = loadObj.formulaList[i].show;
-			funcList[i].children[boldPos].checked = loadObj.formulaList[i].isBold;
+			funcList[i].children[colorPos].value =
+				loadObj.formulaList[i].color;
+			funcList[i].children[showFuncPos].checked =
+				loadObj.formulaList[i].show;
+			funcList[i].children[boldPos].checked =
+				loadObj.formulaList[i].isBold;
 			if (i == funcList.length - 1) {
+				/* delay 600ms to wait for the formula
+				 * editor to initialize
+				 */
 				setTimeout(function() {
 					clearFuncLayer(funcCtx, axis);
 					resetAxis(funcCtx, axis);
-					$('#show-axis')[0].checked = loadObj.axis;
-					$('#grid')[0].checked = loadObj.grid;
-					let xLeftValue = idName('x-left-value').value;
-					let xRightValue = idName('x-right-value').value;
-					let yLeftValue = idName('y-left-value').value;
-					let yRightValue = idName('y-right-value').value;
-					axis.show = idName('show-axis').checked;
-					axis.displayGrid = idName('grid').checked;
+					$('#show-axis')[0].checked =
+						loadObj.axis;
+					$('#grid')[0].checked =
+						loadObj.grid;
+					let xLeftValue =
+						idName('x-left-value').value;
+					let xRightValue =
+						idName('x-right-value').value;
+					let yLeftValue =
+						idName('y-left-value').value;
+					let yRightValue =
+						idName('y-right-value').value;
+					axis.show =
+						idName('show-axis').checked;
+					axis.displayGrid =
+						idName('grid').checked;
 
-					setAxis(funcCtx, axis, canvasWidth, canvasHeight, xLeftValue, xRightValue,
+					setAxis(funcCtx, axis,
+						canvasWidth, canvasHeight,
+						xLeftValue, xRightValue,
 						yLeftValue, yRightValue);
 					drawAllFunc(funcCtx, axis);
 					showGrid(funcCtx, axis);
