@@ -1,5 +1,5 @@
 /*
- * save and load the web
+ * save and load the web state
  */
 
 /* the object used to save */
@@ -9,9 +9,13 @@ saveObj.formula = {};
 var saveJson = {};
 
 /*
- * save the current website as json
+ * save the current website state as json
  */
 function saveAsJson() {
+	/* save hand-paint canvas state */
+	saveObj.image = paintLayer.toDataURL();
+
+	/* save the function panel state */
 	saveObj.formula.penColor = $('#pen-color')[0].value;
 	saveObj.formula.penSize = $('#pen-size')[0].value;
 	saveObj.formula.eraserSize = $('#eraser-size')[0].value;
@@ -33,23 +37,27 @@ function saveAsJson() {
 			isBold: funcList[i].children[boldPos].checked
 		});
 	}
-	saveObj.shape = saveCanvas(shapeLayer);
+
+	/* save the shape canvas */
+	saveObj.shape = saveShape(shapeLayer);
+
+	/* transform the object to json */
 	saveJson = JSON.stringify(saveObj);
 }
 
 /*
- * save the canvas @canvas
+ * save the shape canvas @shape
  */
-function saveCanvas(canvas) {
-	return canvas.toObject(['name']);
+function saveShape(shape) {
+	return shape.toObject(['name']);
 }
 
 /*
- * load the json file
+ * load the json file, transform it to the shape canvas
  */
-function loadCanvas(canvas, json) {
-	canvas.loadFromJSON(json);
-	canvas.renderAll();
+function loadShape(shape, json) {
+	shape.loadFromJSON(json);
+	shape.renderAll();
 }
 
 /*
@@ -80,10 +88,21 @@ function myLoad(filename) {
 	filename = filename[filename.length - 1];
 	filename = 'save/' + filename;
 
+	/* load */
 	$.getJSON(filename, function(data) {
-		loadCanvas(shapeLayer, data.shape);
+		/* load hand-paint canvas */
+		let image = new Image();
+		image.onload = function() {
+			paintCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+			paintCtx.drawImage(image, 0, 0);
+		}
+		image.src = data.image;
+
+		/* load the shape canvas */
+		loadShape(shapeLayer, data.shape);
+
+		/* load the function panel */
 		loadObj = data.formula;
-		console.log(loadObj);
 		$('#pen-color')[0].value = loadObj.penColor;
 		$('#pen-size')[0].value = loadObj.penSize;
 		$('#eraser-size')[0].value = loadObj.eraserSize;
@@ -131,6 +150,8 @@ function myLoad(filename) {
 						idName('y-left-value').value;
 					let yRightValue =
 						idName('y-right-value').value;
+
+					/* repaint all function */
 					axis.show =
 						idName('show-axis').checked;
 					axis.displayGrid =

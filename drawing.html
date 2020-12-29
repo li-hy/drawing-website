@@ -88,6 +88,13 @@
 							<input id="show-axis" type="checkbox" title="Display axis" onchange="axis.show = this.checked; clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);">on
 							<input id="grid" type="checkbox" title="Show grid" onchange="axis.displayGrid = this.checked; clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis);">grid
 						</p>
+						<p>
+							&nbsp;&nbsp;
+							Axis origin: X = <input id="origin-X" type="text" style="width: 50px" value="0" onchange="axis.frame = this.checked; clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)">
+							&nbsp;&nbsp;
+							Y = <input id="origin-Y" type="text" style="width: 50px" value="0" onchange="axis.frame = this.checked; clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)">
+							<input id="show-frame" type="checkbox" title="Show axis as frame" onchange="axis.frame = this.checked; disableInput('origin-X', this.checked); disableInput('origin-Y', this.checked); clearFuncLayer(funcCtx, axis); showAxis(funcCtx, axis); showGrid(funcCtx, axis); drawAllFunc(funcCtx, axis)">show axis as frame
+						</p>
 					</div>
 					<button class="btn" id="add-a-formula" title="Add a function" onclick="addAFormula()">
 						Add a formula

@@ -454,8 +454,8 @@ function autoSetAxis(ctx, axis) {
 	let yLeftValue = idName('y-left-value').value;
 	let yRightValue = idName('y-right-value').value;
 
-	setAxis(ctx, axis, canvasWidth, canvasHeight, xLeftValue, xRightValue,
-		yLeftValue, yRightValue);
+	setAxis(ctx, axis, canvasWidth, canvasHeight, xLeftValue,
+		xRightValue, yLeftValue, yRightValue);
 }
 
 /*
@@ -528,12 +528,84 @@ function drawEquilateralTriangle(ctx, x, y, radius,
 }
 
 /*
+ * disable a input element
+ * @id      : the input id
+ * @disable : disable or not
+ */
+function disableInput(id, disable) {
+	if (disable)
+		idName(id).disabled = "disabled";
+	else
+		idName(id).disabled = "";
+}
+
+/*
  * draw the axis
  * @ctx      : canvas to be painted
  * @axis     : axis
  * @color    : color of the axis
  */
 function drawAxis(ctx, axis, color = '#000000') {
+	/* axis font parameter */
+	ctx.font = "normal 12px serif";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+	ctx.fillStyle = color;
+
+	let arrowRadius = 5;	/* radius of axis arrow circumcircle */
+	let lineSize = 2;	/* axis line size */
+
+	/* get the axis origin coordinates */
+	let originX = parseFloat(idName('origin-X').value);
+	let originY = parseFloat(idName('origin-Y').value);
+	if (originX < axis.xLeftValue || originX > axis.xRightValue ||
+		originY < axis.yLeftValue || originY > axis.yRightValue) {
+		alert('The origin is out of the canvas');
+		return;
+	}
+	originX = axis.xLeftRange + axis.xScale *
+		(originX - axis.xLeftValue);
+	/* yLeftRange is pos and yRightRange is neg */
+	originY = axis.yLeftRange - axis.yScale *
+		(originY - axis.yLeftValue);
+
+	/* draw x-axis */
+	drawLine(ctx, axis.xLeftRange, originY,
+		axis.xRightRange + axis.blank - 5, originY, color, lineSize);
+	drawEquilateralTriangle(ctx, axis.xRightRange + axis.blank - 5,
+		originY, arrowRadius, true, 1, color);
+	let i, tx, ty;
+	ty = originY + 10;
+	for (i = 0; i < axis.xDivision.length; ++i) {
+		tx = axis.xDivision[i];
+		drawLine(ctx, tx, originY, tx, originY - 3, color, lineSize);
+		ctx.fillText((axis.xLeftValue + i * axis.dx /
+			(axis.xDivision.length - 1)).toFixed(1), tx, ty);
+	}
+	ctx.fillText('x', axis.xRightRange + axis.blank - 10, ty);
+
+	/* draw y axis */
+	drawLine(ctx, originX, axis.yLeftRange, originX,
+		axis.yRightRange - axis.blank + 5, color, lineSize);
+	drawEquilateralTriangle(ctx, originX,
+		axis.yRightRange - axis.blank + 5, arrowRadius, true, 0, color);
+	tx = originX - 15;
+	for (i = 0; i <= axis.yDivision.length; ++i) {
+		ty =  axis.yDivision[i];
+		drawLine(ctx, originX, ty, originX + 3, ty, color, lineSize);
+		ctx.fillText((axis.yLeftValue + i * axis.dy /
+			(axis.yDivision.length - 1)).toFixed(1), tx - 1, ty);
+	}
+	ctx.fillText('y', tx, axis.yRightRange - axis.blank + 10);
+}
+
+/*
+ * draw the axis as a frame
+ * @ctx      : canvas to be painted
+ * @axis     : axis
+ * @color    : color of the axis
+ */
+function drawAxisAsFrame(ctx, axis, color = '#000000') {
 	/* axis font parameter */
 	ctx.font = "normal 12px serif";
 	ctx.textAlign = "center";
@@ -600,16 +672,18 @@ function clearFuncLayer(ctx, axis) {
 function showAxis(ctx, axis, color = '#000000') {
 	if (!axis.show) /* do not show axis */
 		return;
-	if (axis.set) { /* have set axis */
-		drawAxis(ctx, axis, color);
-	} else {        /* haven't set axis */
+	if (!axis.set) { /* haven't set axis */
 		let xLeftValue = idName('x-left-value').value;
 		let xRightValue = idName('x-right-value').value;
 		let yLeftValue = idName('y-left-value').value;
 		let yRightValue = idName('y-right-value').value;
 
-		setAxis(ctx, axis, canvasWidth, canvasHeight, xLeftValue, xRightValue,
-			yLeftValue, yRightValue);
+		setAxis(ctx, axis, canvasWidth, canvasHeight, xLeftValue,
+			xRightValue, yLeftValue, yRightValue);
+	}
+	if (axis.frame) { /* show axis as a frame*/
+		drawAxisAsFrame(ctx, axis, color);
+	} else {          /* show axis as normal */
 		drawAxis(ctx, axis, color);
 	}
 }
@@ -661,7 +735,7 @@ function drawFunc(ctx, axis, color, funcStr, show = false, blod = false) {
 	}
 	if (funcStr.length == 0)  /* input is null */
 		return;
-	/* transfrom the function expression string to a function */
+	/* transform the function expression string to a function */
 	funcStr = input2FuncStr(funcStr);
 	let func = str2Func(funcStr);
 	/* define the drawing range */
@@ -718,8 +792,8 @@ function changeAxis(ctx, axis) {
 	let yLeftValue = idName('y-left-value').value;
 	let yRightValue = idName('y-right-value').value;
 
-	setAxis(ctx, axis, canvasWidth, canvasHeight, xLeftValue, xRightValue,
-		yLeftValue, yRightValue);
+	setAxis(ctx, axis, canvasWidth, canvasHeight, xLeftValue,
+		xRightValue, yLeftValue, yRightValue);
 	drawAllFunc(ctx, axis);
 	showGrid(ctx, axis);
 	showAxis(ctx, axis);
